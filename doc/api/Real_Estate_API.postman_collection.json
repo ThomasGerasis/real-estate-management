@@ -1,0 +1,787 @@
+{
+	"info": {
+		"_postman_id": "real-estate-api-collection",
+		"name": "Real Estate API",
+		"description": "Complete API collection for Real Estate Laravel Backend\n\nBase URL: {{base_url}}/api/v1\n\nFeatures:\n- Property search and filtering\n- Agent management\n- Blog posts\n- Static pages\n- Navigation menus\n- Site settings\n- Cities and districts",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Properties",
+			"item": [
+				{
+					"name": "Get All Properties",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/properties?per_page=12&page=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"properties"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "12",
+									"description": "Items per page (default: 12)"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number"
+								},
+								{
+									"key": "listing_type",
+									"value": "sale",
+									"description": "Filter by listing type: sale, rent",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "apartment",
+									"description": "Filter by type: house, apartment, commercial, land",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "available",
+									"description": "Filter by status: available, sold, rented, pending",
+									"disabled": true
+								},
+								{
+									"key": "city_id",
+									"value": "1",
+									"description": "Filter by city ID",
+									"disabled": true
+								},
+								{
+									"key": "district_id",
+									"value": "1",
+									"description": "Filter by district ID",
+									"disabled": true
+								},
+								{
+									"key": "min_price",
+									"value": "200000",
+									"description": "Minimum price",
+									"disabled": true
+								},
+								{
+									"key": "max_price",
+									"value": "500000",
+									"description": "Maximum price",
+									"disabled": true
+								},
+								{
+									"key": "bedrooms",
+									"value": "2",
+									"description": "Minimum bedrooms",
+									"disabled": true
+								},
+								{
+									"key": "energy_class",
+									"value": "A",
+									"description": "Filter by energy class: A+, A, B, C, D, E, F, G",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "berlin",
+									"description": "Search in title, description, address",
+									"disabled": true
+								},
+								{
+									"key": "sort_by",
+									"value": "price",
+									"description": "Sort by field (default: created_at)",
+									"disabled": true
+								},
+								{
+									"key": "sort_order",
+									"value": "asc",
+									"description": "Sort order: asc, desc (default: desc)",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get all properties with optional filters.\n\nSupports pagination, search, and multiple filters."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Property",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/properties/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"properties",
+								"1"
+							]
+						},
+						"description": "Get detailed information about a single property by ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Featured Properties",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/properties/featured?limit=6",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"properties",
+								"featured"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "6",
+									"description": "Number of featured properties to return (default: 6)"
+								}
+							]
+						},
+						"description": "Get featured properties marked as is_featured=true."
+					},
+					"response": []
+				},
+				{
+					"name": "Search Properties",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/properties/search?listing_type=rent&city_id=1&min_price=500&max_price=1500&bedrooms=2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"properties",
+								"search"
+							],
+							"query": [
+								{
+									"key": "listing_type",
+									"value": "rent",
+									"description": "sale or rent"
+								},
+								{
+									"key": "city_id",
+									"value": "1"
+								},
+								{
+									"key": "min_price",
+									"value": "500"
+								},
+								{
+									"key": "max_price",
+									"value": "1500"
+								},
+								{
+									"key": "bedrooms",
+									"value": "2"
+								}
+							]
+						},
+						"description": "Advanced property search with multiple filters."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Similar Properties",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/properties/1/similar?limit=4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"properties",
+								"1",
+								"similar"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "4",
+									"description": "Number of similar properties (default: 4)"
+								}
+							]
+						},
+						"description": "Get properties similar to the specified property based on type, location, and price range."
+					},
+					"response": []
+				},
+				{
+					"name": "Properties For Sale",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/properties?listing_type=sale&status=available",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"properties"
+							],
+							"query": [
+								{
+									"key": "listing_type",
+									"value": "sale"
+								},
+								{
+									"key": "status",
+									"value": "available"
+								}
+							]
+						},
+						"description": "Get all available properties for sale."
+					},
+					"response": []
+				},
+				{
+					"name": "Properties For Rent",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/properties?listing_type=rent&status=available",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"properties"
+							],
+							"query": [
+								{
+									"key": "listing_type",
+									"value": "rent"
+								},
+								{
+									"key": "status",
+									"value": "available"
+								}
+							]
+						},
+						"description": "Get all available properties for rent."
+					},
+					"response": []
+				}
+			],
+			"description": "Property endpoints for listing, searching, and filtering real estate properties."
+		},
+		{
+			"name": "Agents",
+			"item": [
+				{
+					"name": "Get All Agents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/agents?per_page=12",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"agents"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "12",
+									"description": "Items per page"
+								},
+								{
+									"key": "search",
+									"value": "john",
+									"description": "Search by name or bio",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get all active agents with property counts."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Agent",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/agents/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"agents",
+								"1"
+							]
+						},
+						"description": "Get agent profile with their properties."
+					},
+					"response": []
+				}
+			],
+			"description": "Agent management endpoints."
+		},
+		{
+			"name": "Blog Posts",
+			"item": [
+				{
+					"name": "Get All Posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/posts?per_page=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "10"
+								},
+								{
+									"key": "search",
+									"value": "market",
+									"description": "Search in title, excerpt, content",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get all published blog posts."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Post",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/posts/real-estate-market-trends-2025",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"real-estate-market-trends-2025"
+							]
+						},
+						"description": "Get a single post by slug."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Latest Posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/posts/latest?limit=3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"latest"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "3",
+									"description": "Number of latest posts (default: 3)"
+								}
+							]
+						},
+						"description": "Get the latest published posts."
+					},
+					"response": []
+				}
+			],
+			"description": "Blog post endpoints."
+		},
+		{
+			"name": "Pages",
+			"item": [
+				{
+					"name": "Get All Pages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/pages",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"pages"
+							],
+							"query": [
+								{
+									"key": "menu_only",
+									"value": "true",
+									"description": "Only get pages that show in menu",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get all published pages."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Page",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/pages/about-us",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"pages",
+								"about-us"
+							]
+						},
+						"description": "Get a single page by slug (e.g., about-us, contact, services)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Menu Pages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/pages?menu_only=true",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"pages"
+							],
+							"query": [
+								{
+									"key": "menu_only",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Get only pages that should appear in the navigation menu."
+					},
+					"response": []
+				}
+			],
+			"description": "Static page endpoints (About, Contact, Services, etc.)."
+		},
+		{
+			"name": "Cities & Districts",
+			"item": [
+				{
+					"name": "Get All Cities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/cities",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cities"
+							]
+						},
+						"description": "Get all active cities with property counts."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single City",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/cities/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cities",
+								"1"
+							]
+						},
+						"description": "Get city details with districts."
+					},
+					"response": []
+				},
+				{
+					"name": "Get City Districts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/cities/1/districts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cities",
+								"1",
+								"districts"
+							]
+						},
+						"description": "Get all districts for a specific city."
+					},
+					"response": []
+				}
+			],
+			"description": "Location endpoints for cities and districts."
+		},
+		{
+			"name": "Menus",
+			"item": [
+				{
+					"name": "Get All Menus",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/menu",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"menu"
+							]
+						},
+						"description": "Get both header and footer menus with children."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Header Menu",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/menu/header",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"menu",
+								"header"
+							]
+						},
+						"description": "Get only header/navigation menu items."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Footer Menu",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/menu/footer",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"menu",
+								"footer"
+							]
+						},
+						"description": "Get only footer menu items."
+					},
+					"response": []
+				}
+			],
+			"description": "Navigation menu endpoints."
+		},
+		{
+			"name": "Settings",
+			"item": [
+				{
+					"name": "Get All Settings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/settings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"settings"
+							]
+						},
+						"description": "Get all site settings (logo, contact info, social media, SEO settings)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Settings by Group",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/settings/group/general",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"settings",
+								"group",
+								"general"
+							]
+						},
+						"description": "Get settings for a specific group: general, contact, social, seo, footer."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Contact Settings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/settings/group/contact",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"settings",
+								"group",
+								"contact"
+							]
+						},
+						"description": "Get contact settings (email, phone, address)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Social Settings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/settings/group/social",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"settings",
+								"group",
+								"social"
+							]
+						},
+						"description": "Get social media settings (Facebook, Twitter, Instagram, LinkedIn, YouTube)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Setting",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/settings/site_name",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"settings",
+								"site_name"
+							]
+						},
+						"description": "Get a single setting by key."
+					},
+					"response": []
+				}
+			],
+			"description": "Site configuration and settings endpoints."
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8192",
+			"type": "string"
+		}
+	]
+}

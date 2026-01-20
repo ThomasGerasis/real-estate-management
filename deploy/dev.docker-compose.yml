@@ -1,0 +1,20 @@
+services:
+  real-estate:
+    container_name: real-estate
+    build:
+      context: ../
+      dockerfile: deploy/dev.Dockerfile
+    network_mode: bridge
+    image: real-estate
+    environment:
+      - APP_ENV=local
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - 8192:80
+    volumes:
+      - ../src:/app
+    env_file:
+      - path: ./.env
+    tty: true
+    restart: unless-stopped

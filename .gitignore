@@ -1,0 +1,11 @@
+deploy/**/*.env
+xdebug.ini
+.idea
+.vscode
+.cursor
+vendor
+# MacOS
+.DS_Store
+# Thumbnails
+._*
+sportdatahub-api.code-workspace
