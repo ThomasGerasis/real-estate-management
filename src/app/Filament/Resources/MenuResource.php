@@ -33,7 +33,7 @@ class MenuResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('resources.navigation_groups.settings');
+        return __('lang.navigation_groups.settings');
     }
 
     public static function form(Form $form): Form

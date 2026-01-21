@@ -33,7 +33,7 @@ class PageResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('resources.navigation_groups.content');
+        return __('lang.navigation_groups.content');
     }
 
     public static function form(Form $form): Form

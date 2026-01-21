@@ -1,7 +1,6 @@
 <?php
 
 return [
-    // Navigation Groups
     'navigation_groups' => [
         'properties' => 'Ακίνητα',
         'content' => 'Περιεχόμενο',
@@ -9,21 +8,16 @@ return [
         'settings' => 'Ρυθμίσεις',
     ],
 
-    // Property Resource
     'property' => [
         'label' => 'Ακίνητο',
         'plural_label' => 'Ακίνητα',
-
         'sections' => [
             'basic_information' => 'Βασικές Πληροφορίες',
             'location' => 'Τοποθεσία',
-            'pricing' => 'Τιμολόγηση',
             'features' => 'Χαρακτηριστικά',
-            'images' => 'Εικόνες',
-            'agent_information' => 'Πληροφορίες Μεσίτη',
             'additional_information' => 'Επιπλέον Πληροφορίες',
+            'images' => 'Εικόνες',
         ],
-
         'fields' => [
             'title' => 'Τίτλος',
             'description' => 'Περιγραφή',
@@ -31,74 +25,41 @@ return [
             'listing_type' => 'Τύπος Καταχώρησης',
             'status' => 'Κατάσταση',
             'price' => 'Τιμή',
-            'bedrooms' => 'Υπνοδωμάτια',
-            'bathrooms' => 'Μπάνια',
-            'energy_class' => 'Ενεργειακή Κλάση',
-            'area' => 'Εμβαδόν',
-            'year_built' => 'Έτος Κατασκευής',
+            'agent' => 'Μεσίτης',
             'address' => 'Διεύθυνση',
             'city' => 'Πόλη',
             'district' => 'Περιοχή',
-            'postal_code' => 'Ταχυδρομικός Κώδικας',
-            'latitude' => 'Γεωγραφικό Πλάτος',
-            'longitude' => 'Γεωγραφικό Μήκος',
-            'agent' => 'Μεσίτης',
-            'featured' => 'Προτεινόμενο',
-            'published' => 'Δημοσιευμένο',
-            'views' => 'Προβολές',
+            'postal_code' => 'Τ.Κ.',
+            'area' => 'Εμβαδόν',
+            'bedrooms' => 'Υπνοδωμάτια',
+            'bathrooms' => 'Μπάνια',
+            'garage' => 'Γκαράζ',
+            'year_built' => 'Έτος Κατασκευής',
             'images' => 'Εικόνες',
+            'featured' => 'Επιλεγμένο',
+            'published' => 'Ημερομηνία Δημοσίευσης',
         ],
-
         'types' => [
             'house' => 'Μονοκατοικία',
             'apartment' => 'Διαμέρισμα',
             'commercial' => 'Επαγγελματικός Χώρος',
             'land' => 'Οικόπεδο',
         ],
-
         'listing_types' => [
             'sale' => 'Προς Πώληση',
             'rent' => 'Προς Ενοικίαση',
         ],
-
         'statuses' => [
             'available' => 'Διαθέσιμο',
-            'pending' => 'Σε Εκκρεμότητα',
             'sold' => 'Πωλήθηκε',
             'rented' => 'Ενοικιάστηκε',
+            'pending' => 'Σε Εκκρεμότητα',
         ],
     ],
 
-    // City Resource
-    'city' => [
-        'label' => 'Πόλη',
-        'plural_label' => 'Πόλεις',
-
-        'fields' => [
-            'name' => 'Όνομα',
-            'slug' => 'Slug',
-            'properties_count' => 'Αριθμός Ακινήτων',
-        ],
-    ],
-
-    // District Resource
-    'district' => [
-        'label' => 'Περιοχή',
-        'plural_label' => 'Περιοχές',
-
-        'fields' => [
-            'name' => 'Όνομα',
-            'slug' => 'Slug',
-            'city' => 'Πόλη',
-            'properties_count' => 'Αριθμός Ακινήτων',
-        ],
-    ],
-
-    // Agent Resource
     'agent' => [
         'label' => 'Μεσίτης',
         'plural_label' => 'Μεσίτες',
-
         'fields' => [
             'name' => 'Όνομα',
             'email' => 'Email',
@@ -109,46 +70,59 @@ return [
         ],
     ],
 
-    // Post Resource
+    'city' => [
+        'label' => 'Πόλη',
+        'plural_label' => 'Πόλεις',
+        'fields' => [
+            'name' => 'Όνομα',
+            'slug' => 'Slug',
+            'properties_count' => 'Αριθμός Ακινήτων',
+        ],
+    ],
+
+    'district' => [
+        'label' => 'Περιοχή',
+        'plural_label' => 'Περιοχές',
+        'fields' => [
+            'name' => 'Όνομα',
+            'city' => 'Πόλη',
+            'properties_count' => 'Αριθμός Ακινήτων',
+        ],
+    ],
+
     'post' => [
         'label' => 'Άρθρο',
         'plural_label' => 'Άρθρα',
-
         'fields' => [
             'title' => 'Τίτλος',
             'slug' => 'Slug',
             'content' => 'Περιεχόμενο',
-            'excerpt' => 'Περίληψη',
-            'featured_image' => 'Κύρια Εικόνα',
+            'excerpt' => 'Απόσπασμα',
+            'featured_image' => 'Εικόνα',
             'published_at' => 'Ημερομηνία Δημοσίευσης',
             'author' => 'Συγγραφέας',
             'status' => 'Κατάσταση',
         ],
-
         'statuses' => [
             'draft' => 'Πρόχειρο',
             'published' => 'Δημοσιευμένο',
         ],
     ],
 
-    // Page Resource
     'page' => [
         'label' => 'Σελίδα',
         'plural_label' => 'Σελίδες',
-
         'fields' => [
             'title' => 'Τίτλος',
             'slug' => 'Slug',
             'content' => 'Περιεχόμενο',
-            'published' => 'Δημοσιευμένο',
+            'published' => 'Δημοσιεύτηκε',
         ],
     ],
 
-    // Menu Resource
     'menu' => [
         'label' => 'Μενού',
         'plural_label' => 'Μενού',
-
         'fields' => [
             'name' => 'Όνομα',
             'slug' => 'Slug',

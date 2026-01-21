@@ -49,10 +49,10 @@ class AdminPanelProvider extends PanelProvider
                 \App\Filament\Widgets\LatestProperties::class,
             ])
             ->navigationGroups([
-                __('resources.navigation_groups.properties'),
-                __('resources.navigation_groups.content'),
-                __('resources.navigation_groups.users'),
-                __('resources.navigation_groups.settings'),
+                __('lang.navigation_groups.properties'),
+                __('lang.navigation_groups.content'),
+                __('lang.navigation_groups.users'),
+                __('lang.navigation_groups.settings'),
             ])
             ->sidebarCollapsibleOnDesktop()
             ->plugin(
@@ -72,12 +72,12 @@ class AdminPanelProvider extends PanelProvider
                     ->visible(fn () => app()->getLocale() !== 'en'),
             ])
             ->middleware([
-                \App\Http\Middleware\SetLocale::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
-                AuthenticateSession::class,
                 ShareErrorsFromSession::class,
+                \App\Http\Middleware\SetLocale::class,
+                AuthenticateSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,

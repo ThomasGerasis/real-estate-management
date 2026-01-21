@@ -31,7 +31,7 @@ class AgentResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('resources.navigation_groups.users');
+        return __('lang.navigation_groups.users');
     }
 
     public static function form(Form $form): Form

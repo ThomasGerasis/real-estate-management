@@ -33,7 +33,7 @@ class CityResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('resources.navigation_groups.properties');
+        return __('lang.navigation_groups.properties');
     }
 
     public static function form(Form $form): Form
