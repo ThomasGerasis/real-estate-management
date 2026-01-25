@@ -68,6 +68,13 @@ class PostResource extends Resource
 
                 Forms\Components\Section::make(__('resources.post.fields.content'))
                     ->schema([
+                        Forms\Components\Placeholder::make('shortcode_help')
+                            ->label('Available Shortcodes')
+                            ->content('Use shortcodes to embed dynamic content:
+• [properties limit="6" type="apartment"] - Property listings
+• [contact_form title="Contact Us"] - Contact form
+• [faq category="General"] - FAQ section')
+                            ->columnSpanFull(),
                         Forms\Components\Textarea::make('excerpt')
                             ->label(__('resources.post.fields.excerpt'))
                             ->rows(3)
@@ -165,6 +172,12 @@ class PostResource extends Resource
                     ]),
             ])
             ->actions([
+                Tables\Actions\Action::make('view_frontend')
+                    ->label(__('View on Frontend'))
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->url(fn (Post $record): string => $record->frontend_url)
+                    ->openUrlInNewTab()
+                    ->visible(fn (Post $record): bool => $record->status === 'published'),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\PageController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\PropertyController;
 use App\Http\Controllers\Api\SettingController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -51,4 +52,8 @@ Route::prefix('v1')->group(function () {
     Route::get('/settings', [SettingController::class, 'index']);
     Route::get('/settings/group/{group}', [SettingController::class, 'group']);
     Route::get('/settings/{key}', [SettingController::class, 'show']);
+    
+    // Contact Forms
+    Route::post('/contact', [ContactController::class, 'submit']);
+    Route::post('/property-inquiry', [ContactController::class, 'submitPropertyInquiry']);
 });

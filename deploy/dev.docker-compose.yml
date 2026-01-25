@@ -8,6 +8,7 @@ services:
     image: real-estate
     environment:
       - APP_ENV=local
+      - FRONTEND_URL=${FRONTEND_URL}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:

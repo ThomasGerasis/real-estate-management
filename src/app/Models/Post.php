@@ -52,4 +52,15 @@ class Post extends Model
         
         return $this->title;
     }
+
+    public function getFrontendUrlAttribute(): string
+    {
+        $baseUrl = rtrim(config('app.frontend_url'), '/');
+        return $baseUrl . '/blog/' . $this->slug;
+    }
+
+    public function getProcessedContentAttribute(): string
+    {
+        return process_shortcodes($this->content ?? '');
+    }
 }

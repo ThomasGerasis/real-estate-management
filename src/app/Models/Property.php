@@ -114,4 +114,15 @@ class Property extends Model
         
         return implode('. ', $parts);
     }
+
+    public function getFrontendUrlAttribute(): string
+    {
+        $baseUrl = rtrim(config('app.frontend_url'), '/');
+        return $baseUrl . '/properties/' . $this->id;
+    }
+
+    public function getProcessedDescriptionAttribute(): string
+    {
+        return process_shortcodes($this->description ?? '');
+    }
 }

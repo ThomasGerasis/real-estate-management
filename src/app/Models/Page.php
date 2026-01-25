@@ -36,4 +36,15 @@ class Page extends Model
             }
         });
     }
+
+    public function getFrontendUrlAttribute(): string
+    {
+        $baseUrl = rtrim(config('app.frontend_url'), '/');
+        return $baseUrl . '/' . $this->slug;
+    }
+
+    public function getProcessedContentAttribute(): string
+    {
+        return process_shortcodes($this->content ?? '');
+    }
 }

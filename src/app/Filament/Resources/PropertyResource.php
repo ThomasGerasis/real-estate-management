@@ -340,6 +340,12 @@ class PropertyResource extends Resource
                     ]),
             ])
             ->actions([
+                Tables\Actions\Action::make('view_frontend')
+                    ->label('View on Frontend')
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->url(fn (Property $record): string => $record->frontend_url)
+                    ->openUrlInNewTab()
+                    ->visible(fn (Property $record): bool => $record->published_at !== null),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
