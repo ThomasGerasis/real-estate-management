@@ -52,9 +52,22 @@ class PropertyController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
 
+        // Filter by area (square meters)
+        if ($request->has('min_area')) {
+            $query->where('square_meters', '>=', $request->min_area);
+        }
+        if ($request->has('max_area')) {
+            $query->where('square_meters', '<=', $request->max_area);
+        }
+
         // Filter by bedrooms
         if ($request->has('bedrooms')) {
             $query->where('bedrooms', '>=', $request->bedrooms);
+        }
+
+        // Filter by bathrooms
+        if ($request->has('bathrooms')) {
+            $query->where('bathrooms', '>=', $request->bathrooms);
         }
 
         // Filter by energy class

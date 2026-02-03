@@ -56,4 +56,6 @@ Route::prefix('v1')->group(function () {
     // Contact Forms
     Route::post('/contact', [ContactController::class, 'submit']);
     Route::post('/property-inquiry', [ContactController::class, 'submitPropertyInquiry']);
+    Route::post('/inquiry', [ContactController::class, 'submitGeneralInquiry']);
+    Route::post('/mandate', [ContactController::class, 'submitMandate']);
 });

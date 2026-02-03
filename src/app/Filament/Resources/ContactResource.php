@@ -44,10 +44,13 @@ class ContactResource extends Resource
                             ->options([
                                 'contact' => 'General Contact',
                                 'property_inquiry' => 'Property Inquiry',
+                                'general_inquiry' => 'General Property Inquiry',
+                                'mandate' => 'Mandate Request',
                             ])
                             ->required()
                             ->default('contact')
-                            ->disabled(),
+                            ->disabled()
+                            ->live(),
                         Forms\Components\Select::make('property_id')
                             ->label('Property')
                             ->relationship('property', 'title')
@@ -56,6 +59,8 @@ class ContactResource extends Resource
                             ->visible(fn (Forms\Get $get) => $get('type') === 'property_inquiry'),
                         Forms\Components\TextInput::make('name')
                             ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('surname')
                             ->maxLength(255),
                         Forms\Components\TextInput::make('email')
                             ->email()
@@ -72,6 +77,48 @@ class ContactResource extends Resource
                             ->columnSpanFull(),
                     ])
                     ->columns(2),
+
+                Forms\Components\Section::make('Property Preferences')
+                    ->schema([
+                        Forms\Components\Select::make('city_id')
+                            ->label('City')
+                            ->relationship('city', 'name')
+                            ->searchable()
+                            ->preload(),
+                        Forms\Components\Select::make('listing_type')
+                            ->options([
+                                'sale' => 'Sale',
+                                'rent' => 'Rent',
+                            ]),
+                        Forms\Components\Select::make('property_type')
+                            ->options([
+                                'house' => 'House',
+                                'apartment' => 'Apartment',
+                                'commercial' => 'Commercial',
+                                'land' => 'Land',
+                            ]),
+                        Forms\Components\TextInput::make('bedrooms')
+                            ->numeric()
+                            ->minValue(0),
+                        Forms\Components\TextInput::make('min_price')
+                            ->numeric()
+                            ->prefix('€'),
+                        Forms\Components\TextInput::make('max_price')
+                            ->numeric()
+                            ->prefix('€'),
+                        Forms\Components\TextInput::make('price')
+                            ->label('Price (Mandate)')
+                            ->numeric()
+                            ->prefix('€')
+                            ->visible(fn (Forms\Get $get) => $get('type') === 'mandate'),
+                        Forms\Components\TextInput::make('square_meters')
+                            ->numeric()
+                            ->suffix('m²')
+                            ->visible(fn (Forms\Get $get) => $get('type') === 'mandate'),
+                    ])
+                    ->columns(2)
+                    ->visible(fn (Forms\Get $get) => in_array($get('type'), ['general_inquiry', 'mandate']))
+                    ->collapsible(),
 
                 Forms\Components\Section::make('Admin')
                     ->schema([
@@ -105,19 +152,24 @@ class ContactResource extends Resource
                     ->colors([
                         'primary' => 'contact',
                         'success' => 'property_inquiry',
+                        'info' => 'general_inquiry',
+                        'warning' => 'mandate',
                     ])
-                    ->formatStateUsing(fn (string $state): string => 
-                        $state === 'property_inquiry' ? 'Property Inquiry' : 'General Contact'
-                    ),
+                    ->formatStateUsing(fn (string $state): string => match($state) {
+                        'property_inquiry' => 'Property Inquiry',
+                        'general_inquiry' => 'General Inquiry',
+                        'mandate' => 'Mandate Request',
+                        default => 'General Contact',
+                    }),
                 Tables\Columns\TextColumn::make('property.title')
                     ->label('Property')
                     ->searchable()
                     ->limit(30)
-                    ->toggleable()
-                    ->visible(fn ($record) => $record->type === 'property_inquiry'),
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->formatStateUsing(fn ($record) => $record->surname ? $record->name . ' ' . $record->surname : $record->name),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable()
                     ->sortable()
@@ -125,10 +177,17 @@ class ContactResource extends Resource
                 Tables\Columns\TextColumn::make('phone')
                     ->searchable()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('subject')
-                    ->searchable()
-                    ->limit(30)
-                    ->toggleable(),
+                Tables\Columns\TextColumn::make('city.name')
+                    ->label('City')
+                    ->toggleable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('listing_type')
+                    ->badge()
+                    ->toggleable()
+                    ->colors([
+                        'success' => 'sale',
+                        'info' => 'rent',
+                    ]),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->colors([
@@ -147,12 +206,19 @@ class ContactResource extends Resource
                     ->options([
                         'contact' => 'General Contact',
                         'property_inquiry' => 'Property Inquiry',
+                        'general_inquiry' => 'General Inquiry',
+                        'mandate' => 'Mandate Request',
                     ]),
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
                         'new' => 'New',
                         'read' => 'Read',
                         'replied' => 'Replied',
+                    ]),
+                Tables\Filters\SelectFilter::make('listing_type')
+                    ->options([
+                        'sale' => 'Sale',
+                        'rent' => 'Rent',
                     ]),
             ])
             ->actions([

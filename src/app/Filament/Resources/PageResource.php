@@ -54,6 +54,17 @@ class PageResource extends Resource
                             ->disabled()
                             ->dehydrated()
                             ->unique(ignoreRecord: true),
+                        Forms\Components\Select::make('template')
+                            ->label('Page Template')
+                            ->options([
+                                'default' => 'Default (General Page)',
+                                'contact' => 'Contact Page',
+                                'about' => 'About Us Page',
+                                'full-width' => 'Full Width Page',
+                            ])
+                            ->default('default')
+                            ->required()
+                            ->helperText('Choose the layout template for this page'),
                         Forms\Components\Select::make('status')
                             ->options([
                                 'draft' => 'Draft',
@@ -98,6 +109,7 @@ class PageResource extends Resource
                     ->schema([
                         Forms\Components\FileUpload::make('featured_image')
                             ->image()
+                            ->disk('public')
                             ->directory('pages')
                             ->imageEditor()
                             ->maxSize(2048),
@@ -139,6 +151,15 @@ class PageResource extends Resource
                     ->searchable()
                     ->toggleable()
                     ->copyable(),
+                Tables\Columns\TextColumn::make('template')
+                    ->badge()
+                    ->colors([
+                        'gray' => 'default',
+                        'info' => 'contact',
+                        'warning' => 'about',
+                        'success' => 'full-width',
+                    ])
+                    ->searchable(),
                 Tables\Columns\IconColumn::make('show_in_menu')
                     ->label('In Menu')
                     ->boolean(),

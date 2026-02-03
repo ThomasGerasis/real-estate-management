@@ -47,6 +47,7 @@ class AgentResource extends Resource
                         Forms\Components\FileUpload::make('photo')
                             ->label(__('resources.agent.fields.photo'))
                             ->image()
+                            ->disk('public')
                             ->directory('agents')
                             ->imageEditor()
                             ->maxSize(2048),

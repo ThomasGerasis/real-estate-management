@@ -181,10 +181,21 @@ class PropertyResource extends Resource
 
                 Forms\Components\Section::make(__('resources.property.sections.images'))
                     ->schema([
+                        Forms\Components\FileUpload::make('featured_image')
+                            ->label('Featured Image')
+                            ->helperText('Main image shown in property listings and cards')
+                            ->image()
+                            ->disk('public')
+                            ->directory('properties')
+                            ->imageEditor()
+                            ->maxSize(2048)
+                            ->columnSpanFull(),
                         Forms\Components\FileUpload::make('images')
                             ->label(__('resources.property.fields.images'))
+                            ->helperText('Additional images for property gallery')
                             ->multiple()
                             ->image()
+                            ->disk('public')
                             ->directory('properties')
                             ->imageEditor()
                             ->maxFiles(10)
@@ -236,6 +247,10 @@ class PropertyResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('featured_image')
+                    ->label('Image')
+                    ->disk('public')
+                    ->square(),
                 Tables\Columns\TextColumn::make('title')
                     ->label(__('resources.property.fields.title'))
                     ->searchable()

@@ -10,6 +10,7 @@ class Property extends Model
     protected $fillable = [
         'title',
         'description',
+        'featured_image',
         'agent_id',
         'city_id',
         'district_id',

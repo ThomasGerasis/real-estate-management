@@ -91,6 +91,7 @@ class PostResource extends Resource
                         Forms\Components\FileUpload::make('featured_image')
                             ->label(__('resources.post.fields.featured_image'))
                             ->image()
+                            ->disk('public')
                             ->directory('posts')
                             ->imageEditor()
                             ->maxSize(2048),

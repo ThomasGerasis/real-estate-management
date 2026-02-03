@@ -34,6 +34,7 @@ class PropertyResource extends JsonResource
             'garage' => $this->garage,
             'address' => $this->address,
             'postal_code' => $this->postal_code,
+            'featured_image' => $this->featured_image ? asset('storage/' . $this->featured_image) : null,
             'images' => $this->images ? array_map(function($image) {
                 return asset('storage/' . $image);
             }, $this->images) : [],
