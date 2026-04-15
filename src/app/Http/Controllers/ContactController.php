@@ -5,13 +5,33 @@ namespace App\Http\Controllers;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use OpenApi\Attributes as OA;
 
 class ContactController extends Controller
 {
-    /**
-     * 1. General contact form (contact page)
-     * POST /api/v1/contact
-     */
+    #[OA\Post(
+        path: '/contact',
+        summary: 'Submit contact form',
+        tags: ['Contact'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['name', 'surname', 'email', 'phone', 'message'],
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', maxLength: 255),
+                    new OA\Property(property: 'surname', type: 'string', maxLength: 255),
+                    new OA\Property(property: 'email', type: 'string', format: 'email'),
+                    new OA\Property(property: 'phone', type: 'string'),
+                    new OA\Property(property: 'message', type: 'string'),
+                    new OA\Property(property: 'subject', type: 'string', nullable: true),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: 'Message sent', content: new OA\JsonContent(ref: '#/components/schemas/SuccessMessage')),
+            new OA\Response(response: 422, description: 'Validation error', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError')),
+        ]
+    )]
     public function submit(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -34,10 +54,29 @@ class ContactController extends Controller
         ], 201);
     }
 
-    /**
-     * 2. Property inquiry form (specific property interest)
-     * POST /api/v1/property-inquiry
-     */
+    #[OA\Post(
+        path: '/property-inquiry',
+        summary: 'Submit property inquiry',
+        tags: ['Contact'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['name', 'surname', 'email', 'phone', 'message'],
+                properties: [
+                    new OA\Property(property: 'property_id', type: 'integer', nullable: true),
+                    new OA\Property(property: 'name', type: 'string'),
+                    new OA\Property(property: 'surname', type: 'string'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email'),
+                    new OA\Property(property: 'phone', type: 'string'),
+                    new OA\Property(property: 'message', type: 'string'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: 'Inquiry submitted', content: new OA\JsonContent(ref: '#/components/schemas/SuccessMessage')),
+            new OA\Response(response: 422, description: 'Validation error', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError')),
+        ]
+    )]
     public function submitPropertyInquiry(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -61,10 +100,34 @@ class ContactController extends Controller
         ], 201);
     }
 
-    /**
-     * 3. General inquiry form (looking for properties with preferences)
-     * POST /api/v1/inquiry
-     */
+    #[OA\Post(
+        path: '/inquiry',
+        summary: 'Submit general property inquiry',
+        tags: ['Contact'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['name', 'surname', 'email', 'phone', 'message'],
+                properties: [
+                    new OA\Property(property: 'name', type: 'string'),
+                    new OA\Property(property: 'surname', type: 'string'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email'),
+                    new OA\Property(property: 'phone', type: 'string'),
+                    new OA\Property(property: 'message', type: 'string'),
+                    new OA\Property(property: 'city_id', type: 'integer', nullable: true),
+                    new OA\Property(property: 'listing_type', type: 'string', enum: ['sale', 'rent'], nullable: true),
+                    new OA\Property(property: 'property_type', type: 'string', enum: ['house', 'apartment', 'commercial', 'land'], nullable: true),
+                    new OA\Property(property: 'bedrooms', type: 'integer', nullable: true),
+                    new OA\Property(property: 'min_price', type: 'number', nullable: true),
+                    new OA\Property(property: 'max_price', type: 'number', nullable: true),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: 'Inquiry submitted', content: new OA\JsonContent(ref: '#/components/schemas/SuccessMessage')),
+            new OA\Response(response: 422, description: 'Validation error', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError')),
+        ]
+    )]
     public function submitGeneralInquiry(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -93,10 +156,35 @@ class ContactController extends Controller
         ], 201);
     }
 
-    /**
-     * 4. Mandate form (request to sell/rent your property)
-     * POST /api/v1/mandate
-     */
+    #[OA\Post(
+        path: '/mandate',
+        summary: 'Submit property mandate request',
+        description: 'Used by property owners who want to sell or rent their property through the agency.',
+        tags: ['Contact'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['name', 'surname', 'email', 'phone', 'message', 'city_id', 'listing_type', 'property_type', 'bedrooms', 'price', 'square_meters'],
+                properties: [
+                    new OA\Property(property: 'name', type: 'string'),
+                    new OA\Property(property: 'surname', type: 'string'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email'),
+                    new OA\Property(property: 'phone', type: 'string'),
+                    new OA\Property(property: 'message', type: 'string'),
+                    new OA\Property(property: 'city_id', type: 'integer'),
+                    new OA\Property(property: 'listing_type', type: 'string', enum: ['sale', 'rent']),
+                    new OA\Property(property: 'property_type', type: 'string', enum: ['house', 'apartment', 'commercial', 'land']),
+                    new OA\Property(property: 'bedrooms', type: 'integer'),
+                    new OA\Property(property: 'price', type: 'number'),
+                    new OA\Property(property: 'square_meters', type: 'number'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: 'Mandate submitted', content: new OA\JsonContent(ref: '#/components/schemas/SuccessMessage')),
+            new OA\Response(response: 422, description: 'Validation error', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError')),
+        ]
+    )]
     public function submitMandate(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -125,4 +213,3 @@ class ContactController extends Controller
         ], 201);
     }
 }
-

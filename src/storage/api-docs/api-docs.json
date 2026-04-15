@@ -1,0 +1,1962 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Real Estate API",
+        "description": "REST API for the Real Estate platform. All endpoints are prefixed with /api/v1.",
+        "contact": {
+            "email": "admin@example.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api/v1",
+            "description": "API v1"
+        }
+    ],
+    "paths": {
+        "/agents": {
+            "get": {
+                "tags": [
+                    "Agents"
+                ],
+                "summary": "List agents",
+                "operationId": "d9a20fcfbbb82392fea5b3bdbe3b6ed7",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by name or bio",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 12
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated agent list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Agent"
+                                            }
+                                        },
+                                        "links": {
+                                            "$ref": "#/components/schemas/PaginationLinks"
+                                        },
+                                        "meta": {
+                                            "$ref": "#/components/schemas/PaginationMeta"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/agents/{id}": {
+            "get": {
+                "tags": [
+                    "Agents"
+                ],
+                "summary": "Get an agent",
+                "operationId": "8b1d8acba8dafae0fd3644683af8002a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Agent detail with properties",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Agent"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/cities": {
+            "get": {
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "List active cities",
+                "operationId": "35f27c56ab81a2cb8480e4c363ddafbd",
+                "responses": {
+                    "200": {
+                        "description": "City list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/City"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cities/{id}": {
+            "get": {
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Get a city with its districts",
+                "operationId": "86c851e9139604e5e1ae6138a2fc2fbf",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "City detail",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/City"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/cities/{id}/districts": {
+            "get": {
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Get districts for a city",
+                "operationId": "d9bb587bd7b170ff45e2b0354435cb15",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "District list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/District"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/menu/header": {
+            "get": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Get header menu",
+                "operationId": "a73a1baa2b154877bc3185a5bdfc7b18",
+                "responses": {
+                    "200": {
+                        "description": "Header menu items",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/MenuItem"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/menu/footer": {
+            "get": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Get footer menu",
+                "operationId": "7843ed9f4a3e95fd8651570d10cb31c5",
+                "responses": {
+                    "200": {
+                        "description": "Footer menu items",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/MenuItem"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/menu": {
+            "get": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Get all menus (header + footer)",
+                "operationId": "21d80938adcb23ac548337cad419e81e",
+                "responses": {
+                    "200": {
+                        "description": "All menus",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "header": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/MenuItem"
+                                            }
+                                        },
+                                        "footer": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/MenuItem"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pages": {
+            "get": {
+                "tags": [
+                    "Pages"
+                ],
+                "summary": "List published pages",
+                "operationId": "be285396fe3a2c5171e59e42660abcc8",
+                "parameters": [
+                    {
+                        "name": "menu_only",
+                        "in": "query",
+                        "description": "Return only pages shown in menu",
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Page list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Page"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pages/{slug}": {
+            "get": {
+                "tags": [
+                    "Pages"
+                ],
+                "summary": "Get a page by slug",
+                "operationId": "33d9625702399be62d77fdda42afb469",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Page detail",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Page"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/posts": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "List blog posts",
+                "operationId": "cce7863441436fd49dc474491f658292",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search in title, excerpt, content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated post list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Post"
+                                            }
+                                        },
+                                        "links": {
+                                            "$ref": "#/components/schemas/PaginationLinks"
+                                        },
+                                        "meta": {
+                                            "$ref": "#/components/schemas/PaginationMeta"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/posts/{slug}": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Get a post by slug",
+                "operationId": "20827f95d9cbef400d515a1a8bef8b35",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Post detail",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Post"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/posts/latest": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Get latest posts",
+                "operationId": "e40b50a8d681dc23632ac6937f5ec2d7",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 3
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Latest posts",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Post"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/properties": {
+            "get": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "List properties",
+                "description": "Returns a paginated list of properties with optional filters.",
+                "operationId": "13fea573f37f88995828f064090ca444",
+                "parameters": [
+                    {
+                        "name": "listing_type",
+                        "in": "query",
+                        "description": "Filter by listing type",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "sale",
+                                "rent"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filter by property type",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "house",
+                                "apartment",
+                                "commercial",
+                                "land"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter by status (default: available)",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "available",
+                                "sold",
+                                "rented",
+                                "reserved"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "city_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "district_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "min_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "max_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "min_area",
+                        "in": "query",
+                        "description": "Minimum square meters",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "max_area",
+                        "in": "query",
+                        "description": "Maximum square meters",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "bedrooms",
+                        "in": "query",
+                        "description": "Minimum number of bedrooms",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "bathrooms",
+                        "in": "query",
+                        "description": "Minimum number of bathrooms",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "energy_class",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "A"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search in title, description, address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "created_at"
+                        }
+                    },
+                    {
+                        "name": "sort_order",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "desc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 12
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated property list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Property"
+                                            }
+                                        },
+                                        "links": {
+                                            "$ref": "#/components/schemas/PaginationLinks"
+                                        },
+                                        "meta": {
+                                            "$ref": "#/components/schemas/PaginationMeta"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/properties/{id}": {
+            "get": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Get a property",
+                "operationId": "ed6a5eab533a0c91ff474042dd0183dd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Property detail",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Property"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/properties/featured": {
+            "get": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Get featured properties",
+                "operationId": "0b6254e3693c2e2acda6030e446cb507",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 6
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Featured properties",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Property"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/properties/search": {
+            "get": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Advanced property search",
+                "description": "Accepts the same filters as GET /properties.",
+                "operationId": "3c9032684eef8cd4d17a5e43ff68070a",
+                "parameters": [
+                    {
+                        "name": "listing_type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "sale",
+                                "rent"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "house",
+                                "apartment",
+                                "commercial",
+                                "land"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "city_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "district_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "min_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "max_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "min_area",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "max_area",
+                        "in": "query",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "bedrooms",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "bathrooms",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "energy_class",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "created_at"
+                        }
+                    },
+                    {
+                        "name": "sort_order",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "desc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 12
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated results",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Property"
+                                            }
+                                        },
+                                        "links": {
+                                            "$ref": "#/components/schemas/PaginationLinks"
+                                        },
+                                        "meta": {
+                                            "$ref": "#/components/schemas/PaginationMeta"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/properties/{id}/similar": {
+            "get": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Get similar properties",
+                "operationId": "5f49757aace0a3ba2911dad762f03f42",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 4
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Similar properties",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Property"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    }
+                }
+            }
+        },
+        "/settings": {
+            "get": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Get all settings",
+                "operationId": "f810df75bcb1059765552b706464d2ba",
+                "responses": {
+                    "200": {
+                        "description": "All settings as key-value object",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/settings/group/{group}": {
+            "get": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Get settings by group",
+                "operationId": "5f3b9695f6225c14795d251f99d8e515",
+                "parameters": [
+                    {
+                        "name": "group",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Group settings as key-value object",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/settings/{key}": {
+            "get": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Get a single setting by key",
+                "operationId": "84895bd72c9b3edcb80752f8262ee053",
+                "parameters": [
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Setting value",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "key": {
+                                            "type": "string"
+                                        },
+                                        "value": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Setting not found"
+                    }
+                }
+            }
+        },
+        "/contact": {
+            "post": {
+                "tags": [
+                    "Contact"
+                ],
+                "summary": "Submit contact form",
+                "operationId": "6dd436752d5e228432e3e812516afd0a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "surname",
+                                    "email",
+                                    "phone",
+                                    "message"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "surname": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "subject": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Message sent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessMessage"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/property-inquiry": {
+            "post": {
+                "tags": [
+                    "Contact"
+                ],
+                "summary": "Submit property inquiry",
+                "operationId": "9dfb7ecd17eda4d1061c4570d85b23d4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "surname",
+                                    "email",
+                                    "phone",
+                                    "message"
+                                ],
+                                "properties": {
+                                    "property_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "surname": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Inquiry submitted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessMessage"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/inquiry": {
+            "post": {
+                "tags": [
+                    "Contact"
+                ],
+                "summary": "Submit general property inquiry",
+                "operationId": "3907b054b3f144fa689f52e214c04b3a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "surname",
+                                    "email",
+                                    "phone",
+                                    "message"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "surname": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "city_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "listing_type": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "enum": [
+                                            "sale",
+                                            "rent"
+                                        ]
+                                    },
+                                    "property_type": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "enum": [
+                                            "house",
+                                            "apartment",
+                                            "commercial",
+                                            "land"
+                                        ]
+                                    },
+                                    "bedrooms": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "min_price": {
+                                        "type": "number",
+                                        "nullable": true
+                                    },
+                                    "max_price": {
+                                        "type": "number",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Inquiry submitted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessMessage"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/mandate": {
+            "post": {
+                "tags": [
+                    "Contact"
+                ],
+                "summary": "Submit property mandate request",
+                "description": "Used by property owners who want to sell or rent their property through the agency.",
+                "operationId": "b4cdd14edc8c04fe67d977863fc13101",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "surname",
+                                    "email",
+                                    "phone",
+                                    "message",
+                                    "city_id",
+                                    "listing_type",
+                                    "property_type",
+                                    "bedrooms",
+                                    "price",
+                                    "square_meters"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "surname": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "city_id": {
+                                        "type": "integer"
+                                    },
+                                    "listing_type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "sale",
+                                            "rent"
+                                        ]
+                                    },
+                                    "property_type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "house",
+                                            "apartment",
+                                            "commercial",
+                                            "land"
+                                        ]
+                                    },
+                                    "bedrooms": {
+                                        "type": "integer"
+                                    },
+                                    "price": {
+                                        "type": "number"
+                                    },
+                                    "square_meters": {
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Mandate submitted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessMessage"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Seo": {
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "PaginationMeta": {
+                "properties": {
+                    "current_page": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "from": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "last_page": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "per_page": {
+                        "type": "integer",
+                        "example": 12
+                    },
+                    "to": {
+                        "type": "integer",
+                        "example": 12
+                    },
+                    "total": {
+                        "type": "integer",
+                        "example": 60
+                    }
+                },
+                "type": "object"
+            },
+            "PaginationLinks": {
+                "properties": {
+                    "first": {
+                        "type": "string",
+                        "example": "http://example.com/api/v1/properties?page=1"
+                    },
+                    "last": {
+                        "type": "string",
+                        "example": "http://example.com/api/v1/properties?page=5"
+                    },
+                    "prev": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "next": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "SuccessMessage": {
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "ValidationError": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "The given data was invalid."
+                    },
+                    "errors": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "Agent": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "João Silva"
+                    },
+                    "photo": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true
+                    },
+                    "bio": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "properties_count": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "City": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Lisbon"
+                    },
+                    "state": {
+                        "type": "string",
+                        "example": "Lisboa",
+                        "nullable": true
+                    },
+                    "country": {
+                        "type": "string",
+                        "example": "Portugal",
+                        "nullable": true
+                    },
+                    "postal_code": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "properties_count": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "districts": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/District"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "District": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Alfama"
+                    },
+                    "city_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "properties_count": {
+                        "type": "integer",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "MenuItem": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "label": {
+                        "type": "string"
+                    },
+                    "url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "icon": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "sort_order": {
+                        "type": "integer"
+                    },
+                    "open_in_new_tab": {
+                        "type": "boolean"
+                    },
+                    "children": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MenuItem"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "Page": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    },
+                    "template": {
+                        "type": "string",
+                        "example": "default"
+                    },
+                    "content": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "excerpt": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "featured_image": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "published",
+                            "draft"
+                        ]
+                    },
+                    "sort_order": {
+                        "type": "integer"
+                    },
+                    "show_in_menu": {
+                        "type": "boolean"
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "seo": {
+                        "$ref": "#/components/schemas/Seo"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Post": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Top 5 neighbourhoods in Lisbon"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "top-5-neighbourhoods-in-lisbon"
+                    },
+                    "excerpt": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "content": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "featured_image": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "published",
+                            "draft"
+                        ]
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "seo": {
+                        "$ref": "#/components/schemas/Seo"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Property": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Modern apartment in Lisbon"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "modern-apartment-in-lisbon"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "type": {
+                        "type": "string",
+                        "example": "apartment",
+                        "enum": [
+                            "house",
+                            "apartment",
+                            "commercial",
+                            "land"
+                        ]
+                    },
+                    "listing_type": {
+                        "type": "string",
+                        "example": "sale",
+                        "enum": [
+                            "sale",
+                            "rent"
+                        ]
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "available",
+                        "enum": [
+                            "available",
+                            "sold",
+                            "rented",
+                            "reserved"
+                        ]
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 250000
+                    },
+                    "price_formatted": {
+                        "type": "string",
+                        "example": "€250,000"
+                    },
+                    "bedrooms": {
+                        "type": "integer",
+                        "example": 3,
+                        "nullable": true
+                    },
+                    "bathrooms": {
+                        "type": "integer",
+                        "example": 2,
+                        "nullable": true
+                    },
+                    "square_meters": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 120.5,
+                        "nullable": true
+                    },
+                    "year_built": {
+                        "type": "integer",
+                        "example": 2010,
+                        "nullable": true
+                    },
+                    "energy_class": {
+                        "type": "string",
+                        "example": "A",
+                        "nullable": true
+                    },
+                    "garage": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "address": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "postal_code": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "featured_image": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true
+                    },
+                    "images": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uri"
+                        }
+                    },
+                    "extra_details": {
+                        "type": "object"
+                    },
+                    "is_featured": {
+                        "type": "boolean"
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "city": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/City"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "district": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/District"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "agent": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/Agent"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "seo": {
+                        "$ref": "#/components/schemas/Seo"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Agents",
+            "description": "Agents"
+        },
+        {
+            "name": "Cities",
+            "description": "Cities"
+        },
+        {
+            "name": "Menu",
+            "description": "Menu"
+        },
+        {
+            "name": "Pages",
+            "description": "Pages"
+        },
+        {
+            "name": "Posts",
+            "description": "Posts"
+        },
+        {
+            "name": "Properties",
+            "description": "Properties"
+        },
+        {
+            "name": "Settings",
+            "description": "Settings"
+        },
+        {
+            "name": "Contact",
+            "description": "Contact"
+        }
+    ]
+}

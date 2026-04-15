@@ -5,3 +5,6 @@ FROM apache-php83-fpm2
 WORKDIR /app
 
 USER www-data
+
+# ownership of the app directory
+RUN chown -R www-data:www-data /app
