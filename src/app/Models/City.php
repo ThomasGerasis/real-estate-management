@@ -12,6 +12,7 @@ class City extends Model
         'state',
         'country',
         'postal_code',
+        'image',
         'is_active',
     ];
 

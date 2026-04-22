@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MenuResource;
 use App\Models\Menu;
+use App\Services\CacheService;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
@@ -20,7 +21,7 @@ class MenuController extends Controller
     )]
     public function header()
     {
-        $menus = Menu::header()->with('children')->get();
+        $menus = CacheService::remember('menu:header', fn() => Menu::header()->with('children')->get());
         return MenuResource::collection($menus);
     }
 
@@ -34,7 +35,7 @@ class MenuController extends Controller
     )]
     public function footer()
     {
-        $menus = Menu::footer()->with('children')->get();
+        $menus = CacheService::remember('menu:footer', fn() => Menu::footer()->with('children')->get());
         return MenuResource::collection($menus);
     }
 
@@ -55,9 +56,14 @@ class MenuController extends Controller
     )]
     public function all()
     {
+        $data = CacheService::remember('menu:all', fn() => [
+            'header' => Menu::header()->with('children')->get(),
+            'footer' => Menu::footer()->with('children')->get(),
+        ]);
+
         return [
-            'header' => MenuResource::collection(Menu::header()->with('children')->get()),
-            'footer' => MenuResource::collection(Menu::footer()->with('children')->get()),
+            'header' => MenuResource::collection($data['header']),
+            'footer' => MenuResource::collection($data['footer']),
         ];
     }
 }

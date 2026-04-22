@@ -59,6 +59,17 @@ class CityResource extends Resource
                             ->required(),
                     ])
                     ->columns(2),
+                Forms\Components\Section::make()
+                    ->schema([
+                        Forms\Components\FileUpload::make('image')
+                            ->label(__('resources.city.fields.image'))
+                            ->image()
+                            ->disk('public')
+                            ->directory('cities')
+                            ->imageEditor()
+                            ->maxSize(2048)
+                            ->columnSpanFull(),
+                    ]),
             ]);
     }
 
@@ -66,6 +77,9 @@ class CityResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('image')
+                    ->label(__('resources.city.fields.image'))
+                    ->disk('public'),
                 Tables\Columns\TextColumn::make('name')
                     ->label(__('resources.city.fields.name'))
                     ->searchable()

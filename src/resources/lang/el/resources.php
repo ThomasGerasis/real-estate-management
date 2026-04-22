@@ -69,6 +69,7 @@ return [
         'fields' => [
             'name' => 'Όνομα',
             'slug' => 'Slug',
+            'image' => 'Εικόνα',
             'properties_count' => 'Αριθμός Ακινήτων',
         ],
     ],

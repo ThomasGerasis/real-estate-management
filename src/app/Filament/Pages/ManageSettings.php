@@ -61,7 +61,7 @@ class ManageSettings extends Page implements Forms\Contracts\HasForms
                                     ->acceptedFileTypes(['image/x-icon', 'image/png'])
                                     ->nullable(),
                             ]),
-                        
+
                         Forms\Components\Tabs\Tab::make('Contact')
                             ->icon('heroicon-o-phone')
                             ->schema([
@@ -82,7 +82,7 @@ class ManageSettings extends Page implements Forms\Contracts\HasForms
                                     ->placeholder('Mon-Fri: 9:00 AM - 6:00 PM')
                                     ->default(''),
                             ]),
-                        
+
                         Forms\Components\Tabs\Tab::make('Social Media')
                             ->icon('heroicon-o-share')
                             ->schema([
@@ -107,7 +107,7 @@ class ManageSettings extends Page implements Forms\Contracts\HasForms
                                     ->url()
                                     ->prefix('https://'),
                             ]),
-                        
+
                         Forms\Components\Tabs\Tab::make('SEO')
                             ->icon('heroicon-o-magnifying-glass')
                             ->schema([
@@ -131,7 +131,7 @@ class ManageSettings extends Page implements Forms\Contracts\HasForms
                                     ->label('Google Tag Manager ID')
                                     ->placeholder('GTM-XXXXXXX'),
                             ]),
-                        
+
                         Forms\Components\Tabs\Tab::make('Footer')
                             ->icon('heroicon-o-document-text')
                             ->schema([
@@ -152,40 +152,40 @@ class ManageSettings extends Page implements Forms\Contracts\HasForms
     protected function getSettingsArray(): array
     {
         $settings = Setting::getAllSettings();
-        
+
         if (empty($settings)) {
             return [];
         }
-        
+
         $data = [];
-        
+
         foreach ($settings as $key => $value) {
             // Skip empty values
             if ($value === null || $value === '') {
                 continue;
             }
-            
+
             // Try to decode JSON values (for file uploads)
             $decoded = json_decode($value, true);
             $data[$key] = $decoded ?? $value;
         }
-        
+
         return $data;
     }
 
     public function save(): void
     {
         $data = $this->form->getState();
-        
+
         foreach ($data as $key => $value) {
             // Handle array values (like file uploads)
             if (is_array($value)) {
                 $value = json_encode($value);
             }
-            
+
             Setting::set($key, $value ?? '', 'text', $this->getGroupForKey($key));
         }
-        
+
         Notification::make()
             ->title('Settings saved successfully')
             ->success()
@@ -205,7 +205,7 @@ class ManageSettings extends Page implements Forms\Contracts\HasForms
         } elseif (str_starts_with($key, 'footer_')) {
             return 'footer';
         }
-        
+
         return 'general';
     }
 

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\ShortcodeProcessor;
+use App\Models\City;
 use App\Models\Property;
 use App\Models\Faq;
 use Illuminate\Support\ServiceProvider;
@@ -52,6 +53,33 @@ class ShortcodeServiceProvider extends ServiceProvider
             $title = $attributes['title'] ?? 'Contact Us';
             
             return view('shortcodes.contact-form', compact('title'))->render();
+        });
+
+        // Register [property_inquiry_form] shortcode
+        $processor->register('property_inquiry_form', function ($attributes) {
+            $title = $attributes['title'] ?? 'Property Inquiry';
+            $propertyId = $attributes['property_id'] ?? null;
+
+            return view('shortcodes.property-inquiry-form', compact('title', 'propertyId'))->render();
+        });
+
+        // Register [inquiry_form] shortcode
+        $processor->register('inquiry_form', function ($attributes) {
+            $title = $attributes['title'] ?? 'Find Your Property';
+            $defaultCityId = $attributes['city_id'] ?? null;
+            $defaultListingType = $attributes['listing_type'] ?? null;
+            $defaultPropertyType = $attributes['property_type'] ?? null;
+            $cities = City::where('is_active', true)->orderBy('name')->get();
+
+            return view('shortcodes.inquiry-form', compact('title', 'cities', 'defaultCityId', 'defaultListingType', 'defaultPropertyType'))->render();
+        });
+
+        // Register [mandate_form] shortcode
+        $processor->register('mandate_form', function ($attributes) {
+            $title = $attributes['title'] ?? 'List Your Property';
+            $cities = City::where('is_active', true)->orderBy('name')->get();
+
+            return view('shortcodes.mandate-form', compact('title', 'cities'))->render();
         });
 
         // Register [faq] shortcode

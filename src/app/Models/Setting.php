@@ -57,12 +57,16 @@ class Setting extends Model
     {
         parent::boot();
 
-        static::saved(function () {
-            Cache::flush();
+        static::saved(function (Setting $setting) {
+            Cache::forget("setting_{$setting->key}");
+            Cache::forget("settings_group_{$setting->group}");
+            Cache::forget('settings_all');
         });
 
-        static::deleted(function () {
-            Cache::flush();
+        static::deleted(function (Setting $setting) {
+            Cache::forget("setting_{$setting->key}");
+            Cache::forget("settings_group_{$setting->group}");
+            Cache::forget('settings_all');
         });
     }
 }

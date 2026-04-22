@@ -7,6 +7,7 @@ use App\Http\Resources\CityResource;
 use App\Http\Resources\DistrictResource;
 use App\Models\City;
 use App\Models\District;
+use App\Services\CacheService;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
@@ -22,10 +23,10 @@ class CityController extends Controller
     )]
     public function index()
     {
-        $cities = City::where('is_active', true)
+        $cities = CacheService::remember('cities:index', fn() => City::where('is_active', true)
             ->withCount('properties')
             ->orderBy('name')
-            ->get();
+            ->get());
 
         return CityResource::collection($cities);
     }
@@ -44,9 +45,9 @@ class CityController extends Controller
     )]
     public function show($id)
     {
-        $city = City::with('districts')
+        $city = CacheService::remember("cities:show:{$id}", fn() => City::with('districts')
             ->withCount('properties')
-            ->findOrFail($id);
+            ->findOrFail($id));
 
         return new CityResource($city);
     }
@@ -64,11 +65,11 @@ class CityController extends Controller
     )]
     public function districts($id)
     {
-        $districts = District::where('city_id', $id)
+        $districts = CacheService::remember("cities:{$id}:districts", fn() => District::where('city_id', $id)
             ->where('is_active', true)
             ->withCount('properties')
             ->orderBy('name')
-            ->get();
+            ->get());
 
         return DistrictResource::collection($districts);
     }

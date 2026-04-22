@@ -53,6 +53,53 @@ Display frequently asked questions in an accordion format.
 [faq limit="10"]
 ```
 
+### 4. Property Inquiry Form - `[property_inquiry_form]`
+
+Embed a form for inquiring about a specific property. Submissions saved as `property_inquiry` type.
+
+**Attributes:**
+- `title` - Form heading (default: "Property Inquiry")
+- `property_id` - Pre-fill a specific property ID (optional)
+
+**Examples:**
+```
+[property_inquiry_form]
+[property_inquiry_form title="Ask About This Property"]
+[property_inquiry_form property_id="42" title="Request Viewing"]
+```
+
+### 5. General Inquiry Form - `[inquiry_form]`
+
+Embed a search-style form for buyers/renters looking for a property. Submissions saved as `general_inquiry` type.
+
+**Attributes:**
+- `title` - Form heading (default: "Find Your Property")
+- `city_id` - Pre-select a city by ID (optional)
+- `listing_type` - Pre-select listing type: `sale`, `rent` (optional)
+- `property_type` - Pre-select property type: `house`, `apartment`, `commercial`, `land` (optional)
+
+**Examples:**
+```
+[inquiry_form]
+[inquiry_form title="Looking to Buy?"]
+[inquiry_form listing_type="rent" title="Find a Rental"]
+[inquiry_form listing_type="sale" property_type="apartment"]
+```
+
+### 6. Mandate Form - `[mandate_form]`
+
+Embed a form for property owners who want to list their property for sale or rent through the agency. Submissions saved as `mandate` type.
+
+**Attributes:**
+- `title` - Form heading (default: "List Your Property")
+
+**Examples:**
+```
+[mandate_form]
+[mandate_form title="Sell or Rent Your Property"]
+[mandate_form title="Request a Free Valuation"]
+```
+
 ## Usage in CMS
 
 1. Go to **Pages** or **Posts** in the admin panel

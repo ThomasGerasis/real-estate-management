@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PageResource;
 use App\Models\Page;
+use App\Services\CacheService;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
@@ -23,13 +24,16 @@ class PageController extends Controller
     )]
     public function index(Request $request)
     {
-        $query = Page::where('status', 'published');
+        $menuOnly = (bool) $request->get('menu_only', false);
+        $cacheKey = $menuOnly ? 'pages:index:menu_only' : 'pages:index';
 
-        if ($request->get('menu_only', false)) {
-            $query->where('show_in_menu', true);
-        }
-
-        $pages = $query->orderBy('sort_order')->get();
+        $pages = CacheService::remember($cacheKey, function () use ($menuOnly) {
+            $query = Page::where('status', 'published');
+            if ($menuOnly) {
+                $query->where('show_in_menu', true);
+            }
+            return $query->orderBy('sort_order')->get();
+        });
 
         return PageResource::collection($pages);
     }
@@ -48,9 +52,9 @@ class PageController extends Controller
     )]
     public function show($slug)
     {
-        $page = Page::where('slug', $slug)
+        $page = CacheService::remember("pages:show:{$slug}", fn() => Page::where('slug', $slug)
             ->where('status', 'published')
-            ->firstOrFail();
+            ->firstOrFail());
 
         return new PageResource($page);
     }

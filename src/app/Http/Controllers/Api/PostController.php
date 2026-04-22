@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use App\Services\CacheService;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
@@ -28,19 +29,21 @@ class PostController extends Controller
     )]
     public function index(Request $request)
     {
-        $query = Post::where('status', 'published');
+        $key = CacheService::requestKey($request);
+        $posts = CacheService::rememberVersioned('posts', $key, function () use ($request) {
+            $query = Post::where('status', 'published');
 
-        if ($request->has('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('excerpt', 'like', "%{$search}%")
-                  ->orWhere('content', 'like', "%{$search}%");
-            });
-        }
+            if ($request->has('search')) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                      ->orWhere('excerpt', 'like', "%{$search}%")
+                      ->orWhere('content', 'like', "%{$search}%");
+                });
+            }
 
-        $perPage = $request->get('per_page', 10);
-        $posts = $query->latest('published_at')->paginate($perPage);
+            return $query->latest('published_at')->paginate($request->get('per_page', 10));
+        });
 
         return PostResource::collection($posts);
     }
@@ -59,9 +62,9 @@ class PostController extends Controller
     )]
     public function show($slug)
     {
-        $post = Post::where('slug', $slug)
+        $post = CacheService::remember("posts:show:{$slug}", fn() => Post::where('slug', $slug)
             ->where('status', 'published')
-            ->firstOrFail();
+            ->firstOrFail());
 
         return new PostResource($post);
     }
@@ -80,11 +83,10 @@ class PostController extends Controller
     public function latest(Request $request)
     {
         $limit = $request->get('limit', 3);
-        
-        $posts = Post::where('status', 'published')
+        $posts = CacheService::rememberVersioned('posts', "latest:{$limit}", fn() => Post::where('status', 'published')
             ->latest('published_at')
             ->limit($limit)
-            ->get();
+            ->get());
 
         return PostResource::collection($posts);
     }

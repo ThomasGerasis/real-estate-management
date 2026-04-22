@@ -22,6 +22,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/properties', [PropertyController::class, 'index']);
     Route::get('/properties/featured', [PropertyController::class, 'featured']);
     Route::get('/properties/search', [PropertyController::class, 'search']);
+    Route::get('/properties/type-counts', [PropertyController::class, 'typeCounts']);
     Route::get('/properties/{id}', [PropertyController::class, 'show']);
     Route::get('/properties/{id}/similar', [PropertyController::class, 'similar']);
     

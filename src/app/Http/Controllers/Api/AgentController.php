@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AgentResource;
 use App\Models\Agent;
+use App\Services\CacheService;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
@@ -28,18 +29,20 @@ class AgentController extends Controller
     )]
     public function index(Request $request)
     {
-        $query = Agent::where('is_active', true)->withCount('properties');
+        $key = CacheService::requestKey($request);
+        $agents = CacheService::rememberVersioned('agents', $key, function () use ($request) {
+            $query = Agent::where('is_active', true)->withCount('properties');
 
-        if ($request->has('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('bio', 'like', "%{$search}%");
-            });
-        }
+            if ($request->has('search')) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('bio', 'like', "%{$search}%");
+                });
+            }
 
-        $perPage = $request->get('per_page', 12);
-        $agents = $query->paginate($perPage);
+            return $query->paginate($request->get('per_page', 12));
+        });
 
         return AgentResource::collection($agents);
     }
@@ -58,7 +61,10 @@ class AgentController extends Controller
     )]
     public function show($id)
     {
-        $agent = Agent::with('properties')->withCount('properties')->findOrFail($id);
+        $agent = CacheService::remember("agents:show:{$id}", fn() => Agent::with('properties')
+            ->withCount('properties')
+            ->findOrFail($id));
+
         return new AgentResource($agent);
     }
 }

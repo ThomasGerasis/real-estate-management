@@ -69,6 +69,7 @@ return [
         'fields' => [
             'name' => 'Name',
             'slug' => 'Slug',
+            'image' => 'Image',
             'properties_count' => 'Properties Count',
         ],
     ],
