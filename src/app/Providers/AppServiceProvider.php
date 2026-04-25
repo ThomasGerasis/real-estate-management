@@ -16,6 +16,8 @@ use App\Observers\MenuObserver;
 use App\Observers\PageObserver;
 use App\Observers\PostObserver;
 use App\Observers\PropertyObserver;
+use App\Models\Subdistrict;
+use App\Observers\SubdistrictObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
         Menu::observe(MenuObserver::class);
         City::observe(CityObserver::class);
         District::observe(DistrictObserver::class);
+        Subdistrict::observe(SubdistrictObserver::class);
         Page::observe(PageObserver::class);
         Agent::observe(AgentObserver::class);
         Post::observe(PostObserver::class);

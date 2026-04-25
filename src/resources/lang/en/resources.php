@@ -22,7 +22,8 @@ return [
             'address' => 'Address',
             'city' => 'City',
             'district' => 'District',
-            'postal_code' => 'Postal Code',
+            'subdistrict' => 'Subdistrict',
+            'location_map' => 'Map Location',
             'area' => 'Area',
             'bedrooms' => 'Bedrooms',
             'bathrooms' => 'Bathrooms',
@@ -80,6 +81,20 @@ return [
         'fields' => [
             'name' => 'Name',
             'city' => 'City',
+            'image' => 'Image',
+            'properties_count' => 'Properties Count',
+            'subdistricts_count' => 'Subdistricts Count',
+        ],
+    ],
+
+    'subdistrict' => [
+        'label' => 'Subdistrict',
+        'plural_label' => 'Subdistricts',
+        'fields' => [
+            'name' => 'Name',
+            'district' => 'District',
+            'city' => 'City',
+            'postal_code' => 'Postal Code',
             'properties_count' => 'Properties Count',
         ],
     ],

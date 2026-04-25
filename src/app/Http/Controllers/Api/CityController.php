@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\DistrictResource;
+use App\Http\Resources\SubdistrictResource;
 use App\Models\City;
 use App\Models\District;
+use App\Models\Subdistrict;
 use App\Services\CacheService;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
@@ -67,10 +69,32 @@ class CityController extends Controller
     {
         $districts = CacheService::remember("cities:{$id}:districts", fn() => District::where('city_id', $id)
             ->where('is_active', true)
-            ->withCount('properties')
+            ->withCount(['properties', 'subdistricts'])
             ->orderBy('name')
             ->get());
 
         return DistrictResource::collection($districts);
+    }
+
+    #[OA\Get(
+        path: '/districts/{id}/subdistricts',
+        summary: 'Get subdistricts for a district',
+        tags: ['Cities'],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Subdistrict list', content: new OA\JsonContent(properties: [new OA\Property(property: 'data', type: 'array', items: new OA\Items(ref: '#/components/schemas/Subdistrict'))])),
+        ]
+    )]
+    public function subdistricts($id)
+    {
+        $subdistricts = CacheService::remember("districts:{$id}:subdistricts", fn() => Subdistrict::where('district_id', $id)
+            ->where('is_active', true)
+            ->withCount('properties')
+            ->orderBy('name')
+            ->get());
+
+        return SubdistrictResource::collection($subdistricts);
     }
 }

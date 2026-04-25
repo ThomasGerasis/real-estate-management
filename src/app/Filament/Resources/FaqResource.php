@@ -94,7 +94,7 @@ class FaqResource extends Resource
             ->defaultSort('sort_order', 'asc')
             ->filters([
                 Tables\Filters\SelectFilter::make('category')
-                    ->options(fn () => Faq::query()->distinct()->pluck('category', 'category')->toArray()),
+                    ->options(fn () => Faq::query()->whereNotNull('category')->distinct()->pluck('category', 'category')->toArray()),
                 Tables\Filters\TernaryFilter::make('is_active')
                     ->label('Active'),
             ])

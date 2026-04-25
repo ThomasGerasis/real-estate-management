@@ -24,8 +24,8 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'year_built', type: 'integer', nullable: true, example: 2010),
         new OA\Property(property: 'energy_class', type: 'string', nullable: true, example: 'A'),
         new OA\Property(property: 'garage', type: 'boolean', nullable: true),
-        new OA\Property(property: 'address', type: 'string', nullable: true),
-        new OA\Property(property: 'postal_code', type: 'string', nullable: true),
+        new OA\Property(property: 'latitude', type: 'number', format: 'float', nullable: true, example: 37.9838),
+        new OA\Property(property: 'longitude', type: 'number', format: 'float', nullable: true, example: 23.7275),
         new OA\Property(property: 'featured_image', type: 'string', format: 'uri', nullable: true),
         new OA\Property(property: 'images', type: 'array', items: new OA\Items(type: 'string', format: 'uri')),
         new OA\Property(property: 'extra_details', type: 'object'),
@@ -33,6 +33,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'published_at', type: 'string', format: 'date-time', nullable: true),
         new OA\Property(property: 'city', ref: '#/components/schemas/City', nullable: true),
         new OA\Property(property: 'district', ref: '#/components/schemas/District', nullable: true),
+        new OA\Property(property: 'subdistrict', ref: '#/components/schemas/Subdistrict', nullable: true),
         new OA\Property(property: 'agent', ref: '#/components/schemas/Agent', nullable: true),
         new OA\Property(property: 'seo', ref: '#/components/schemas/Seo'),
         new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
@@ -58,42 +59,43 @@ class PropertyResource extends JsonResource
             'listing_type' => $this->listing_type,
             'status' => $this->status,
             'price' => $this->price,
-            'price_formatted' => $this->listing_type === 'rent' 
-                ? '€' . number_format($this->price, 0) . '/month'
-                : '€' . number_format($this->price, 0),
+            'price_formatted' => '€' . number_format($this->price, 0),
             'bedrooms' => $this->bedrooms,
             'bathrooms' => $this->bathrooms,
             'square_meters' => $this->square_meters,
             'year_built' => $this->year_built,
             'energy_class' => $this->energy_class,
             'garage' => $this->garage,
-            'address' => $this->address,
-            'postal_code' => $this->postal_code,
+            'latitude' => $this->latitude ? (float) $this->latitude : null,
+            'longitude' => $this->longitude ? (float) $this->longitude : null,
             'featured_image' => $this->featured_image ? asset('storage/' . $this->featured_image) : null,
-            'images' => $this->images ? array_map(function($image) {
+            'images' => $this->images ? array_map(function ($image) {
                 return asset('storage/' . $image);
             }, $this->images) : [],
             'extra_details' => $this->extra_details ?? [],
             'is_featured' => $this->is_featured,
             'published_at' => $this->published_at?->toIso8601String(),
-            
+
             // Relationships
-            'city' => $this->whenLoaded('city', function() {
+            'city' => $this->whenLoaded('city', function () {
                 return new CityResource($this->city);
             }),
-            'district' => $this->whenLoaded('district', function() {
+            'district' => $this->whenLoaded('district', function () {
                 return new DistrictResource($this->district);
             }),
-            'agent' => $this->whenLoaded('agent', function() {
+            'subdistrict' => $this->whenLoaded('subdistrict', function () {
+                return new SubdistrictResource($this->subdistrict);
+            }),
+            'agent' => $this->whenLoaded('agent', function () {
                 return new AgentResource($this->agent);
             }),
-            
+
             // SEO
             'seo' => [
                 'title' => $this->meta_title ?? $this->auto_meta_title,
                 'description' => $this->meta_description ?? $this->auto_meta_description,
             ],
-            
+
             // Timestamps
             'created_at' => $this->created_at->toIso8601String(),
             'updated_at' => $this->updated_at->toIso8601String(),

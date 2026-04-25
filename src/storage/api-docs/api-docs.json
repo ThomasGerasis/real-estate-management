@@ -214,6 +214,45 @@
                 }
             }
         },
+        "/districts/{id}/subdistricts": {
+            "get": {
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Get subdistricts for a district",
+                "operationId": "83cd89cfa1baf839770b55547398389b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Subdistrict list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Subdistrict"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/menu/header": {
             "get": {
                 "tags": [
@@ -553,6 +592,20 @@
                         }
                     },
                     {
+                        "name": "property_type",
+                        "in": "query",
+                        "description": "Filter by property type (alias for type)",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "house",
+                                "apartment",
+                                "commercial",
+                                "land"
+                            ]
+                        }
+                    },
+                    {
                         "name": "status",
                         "in": "query",
                         "description": "Filter by status (default: available)",
@@ -575,6 +628,13 @@
                     },
                     {
                         "name": "district_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "subdistrict_id",
                         "in": "query",
                         "schema": {
                             "type": "integer"
@@ -811,6 +871,19 @@
                         }
                     },
                     {
+                        "name": "property_type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "house",
+                                "apartment",
+                                "commercial",
+                                "land"
+                            ]
+                        }
+                    },
+                    {
                         "name": "city_id",
                         "in": "query",
                         "schema": {
@@ -819,6 +892,13 @@
                     },
                     {
                         "name": "district_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "subdistrict_id",
                         "in": "query",
                         "schema": {
                             "type": "integer"
@@ -930,6 +1010,32 @@
                                         }
                                     },
                                     "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/properties/type-counts": {
+            "get": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Get property counts by type",
+                "description": "Returns total count per property type across all available properties.",
+                "operationId": "6b7a45f6c34ccd4017a3692740bb7ae7",
+                "responses": {
+                    "200": {
+                        "description": "Property counts by type",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "house": 12,
+                                    "apartment": 34,
+                                    "commercial": 5,
+                                    "land": 8
                                 }
                             }
                         }
@@ -1530,7 +1636,7 @@
                         "type": "string",
                         "example": "João Silva"
                     },
-                    "photo": {
+                    "avatar": {
                         "type": "string",
                         "format": "uri",
                         "nullable": true
@@ -1577,6 +1683,11 @@
                         "type": "string",
                         "nullable": true
                     },
+                    "featured_image": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true
+                    },
                     "is_active": {
                         "type": "boolean"
                     },
@@ -1610,8 +1721,20 @@
                     "is_active": {
                         "type": "boolean"
                     },
+                    "image": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true
+                    },
                     "properties_count": {
                         "type": "integer",
+                        "nullable": true
+                    },
+                    "subdistricts": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Subdistrict"
+                        },
                         "nullable": true
                     }
                 },
@@ -1847,12 +1970,16 @@
                         "type": "boolean",
                         "nullable": true
                     },
-                    "address": {
-                        "type": "string",
+                    "latitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 37.9838,
                         "nullable": true
                     },
-                    "postal_code": {
-                        "type": "string",
+                    "longitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 23.7275,
                         "nullable": true
                     },
                     "featured_image": {
@@ -1894,6 +2021,14 @@
                         ],
                         "nullable": true
                     },
+                    "subdistrict": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/Subdistrict"
+                            }
+                        ],
+                        "nullable": true
+                    },
                     "agent": {
                         "oneOf": [
                             {
@@ -1912,6 +2047,34 @@
                     "updated_at": {
                         "type": "string",
                         "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Subdistrict": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Kolonaki"
+                    },
+                    "district_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "postal_code": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "properties_count": {
+                        "type": "integer",
+                        "nullable": true
                     }
                 },
                 "type": "object"

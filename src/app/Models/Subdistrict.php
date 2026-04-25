@@ -6,13 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class District extends Model
+class Subdistrict extends Model
 {
     protected $fillable = [
-        'city_id',
+        'district_id',
         'name',
         'postal_code',
-        'image',
         'is_active',
     ];
 
@@ -20,14 +19,9 @@ class District extends Model
         'is_active' => 'boolean',
     ];
 
-    public function city(): BelongsTo
+    public function district(): BelongsTo
     {
-        return $this->belongsTo(City::class);
-    }
-
-    public function subdistricts(): HasMany
-    {
-        return $this->hasMany(Subdistrict::class);
+        return $this->belongsTo(District::class);
     }
 
     public function properties(): HasMany

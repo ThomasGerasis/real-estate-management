@@ -43,6 +43,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/cities', [CityController::class, 'index']);
     Route::get('/cities/{id}', [CityController::class, 'show']);
     Route::get('/cities/{id}/districts', [CityController::class, 'districts']);
+    Route::get('/districts/{id}/subdistricts', [CityController::class, 'subdistricts']);
     
     // Menus
     Route::get('/menu', [MenuController::class, 'all']);

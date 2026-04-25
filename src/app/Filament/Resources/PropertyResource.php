@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PropertyResource\Pages;
 use App\Filament\Resources\PropertyResource\RelationManagers;
 use App\Models\Property;
+use Dotswan\MapPicker\Fields\Map;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -84,10 +85,11 @@ class PropertyResource extends Resource
                             ->required()
                             ->numeric()
                             ->prefix('€')
-                            ->suffix(fn (Forms\Get $get) => $get('listing_type') === 'rent' ? '/month' : '')
-                            ->helperText(fn (Forms\Get $get) => 
-                                $get('listing_type') === 'rent' 
-                                    ? 'Monthly rent price' 
+                            ->suffix(fn(Forms\Get $get) => $get('listing_type') === 'rent' ? '/month' : '')
+                            ->helperText(
+                                fn(Forms\Get $get) =>
+                                $get('listing_type') === 'rent'
+                                    ? 'Monthly rent price'
                                     : 'Total sale price'
                             )
                             ->maxValue(99999999.99),
@@ -114,14 +116,44 @@ class PropertyResource extends Resource
                             ->live(),
                         Forms\Components\Select::make('district_id')
                             ->label(__('resources.property.fields.district'))
-                            ->relationship('district', 'name', fn (Builder $query, Forms\Get $get) => 
+                            ->relationship(
+                                'district',
+                                'name',
+                                fn(Builder $query, Forms\Get $get) =>
                                 $query->where('city_id', $get('city_id'))
                             )
                             ->searchable()
-                            ->preload(),
+                            ->preload()
+                            ->live(),
+                        Forms\Components\Select::make('subdistrict_id')
+                            ->label(__('resources.property.fields.subdistrict'))
+                            ->options(fn(Forms\Get $get) => \App\Models\Subdistrict::where('district_id', $get('district_id'))
+                                ->where('is_active', true)
+                                ->orderBy('name')
+                                ->pluck('name', 'id'))
+                            ->searchable()
+                            ->placeholder('-'),
                         Forms\Components\TextInput::make('postal_code')
                             ->label(__('resources.property.fields.postal_code'))
                             ->maxLength(255),
+                        Map::make('location')
+                            ->label(__('resources.property.fields.location_map'))
+                            ->columnSpanFull()
+                            ->defaultLocation(latitude: 37.9838, longitude: 23.7275)
+                            ->draggable()
+                            ->zoom(13)
+                            ->tilesUrl('https://tile.openstreetmap.org/{z}/{x}/{y}.png')
+                            ->afterStateHydrated(function (Forms\Set $set, Forms\Get $get, $record) {
+                                if ($record) {
+                                    $set('location', ['lat' => $record->latitude, 'lng' => $record->longitude]);
+                                }
+                            })
+                            ->afterStateUpdated(function (Forms\Set $set, ?array $state) {
+                                $set('latitude', $state['lat'] ?? null);
+                                $set('longitude', $state['lng'] ?? null);
+                            }),
+                        Forms\Components\Hidden::make('latitude'),
+                        Forms\Components\Hidden::make('longitude'),
                     ])
                     ->columns(3),
 
@@ -214,17 +246,19 @@ class PropertyResource extends Resource
                     ->schema([
                         Forms\Components\Placeholder::make('auto_meta_info')
                             ->label('Auto-Generated Preview')
-                            ->content(fn (?Property $record) => 
-                                $record 
-                                    ? "Title: {$record->auto_meta_title}\n\nDescription: {$record->auto_meta_description}" 
+                            ->content(
+                                fn(?Property $record) =>
+                                $record
+                                    ? "Title: {$record->auto_meta_title}\n\nDescription: {$record->auto_meta_description}"
                                     : 'Save the property first to see auto-generated SEO preview'
                             )
                             ->columnSpanFull(),
                         Forms\Components\TextInput::make('meta_title')
                             ->label('SEO Title')
                             ->maxLength(60)
-                            ->placeholder(fn (Forms\Get $get) => 
-                                $get('title') 
+                            ->placeholder(
+                                fn(Forms\Get $get) =>
+                                $get('title')
                                     ? $get('title') . ' - ' . ($get('city_id') ? 'City' : '') . ' - ' . ($get('listing_type') === 'rent' ? 'For Rent' : 'For Sale')
                                     : 'Auto-generated from property details'
                             )
@@ -263,7 +297,7 @@ class PropertyResource extends Resource
                         'success' => 'sale',
                         'info' => 'rent',
                     ])
-                    ->formatStateUsing(fn (string $state): string => __('resources.property.listing_types.' . $state)),
+                    ->formatStateUsing(fn(string $state): string => __('resources.property.listing_types.' . $state)),
                 Tables\Columns\TextColumn::make('type')
                     ->label(__('resources.property.fields.type'))
                     ->badge()
@@ -273,7 +307,7 @@ class PropertyResource extends Resource
                         'warning' => 'commercial',
                         'info' => 'land',
                     ])
-                    ->formatStateUsing(fn (string $state): string => __('resources.property.types.' . $state)),
+                    ->formatStateUsing(fn(string $state): string => __('resources.property.types.' . $state)),
                 Tables\Columns\TextColumn::make('price')
                     ->label(__('resources.property.fields.price'))
                     ->money('EUR')
@@ -287,7 +321,7 @@ class PropertyResource extends Resource
                         'warning' => 'rented',
                         'info' => 'pending',
                     ])
-                    ->formatStateUsing(fn (string $state): string => __('resources.property.statuses.' . $state)),
+                    ->formatStateUsing(fn(string $state): string => __('resources.property.statuses.' . $state)),
                 Tables\Columns\TextColumn::make('city.name')
                     ->label(__('resources.property.fields.city'))
                     ->searchable()
@@ -358,9 +392,9 @@ class PropertyResource extends Resource
                 Tables\Actions\Action::make('view_frontend')
                     ->label('View on Frontend')
                     ->icon('heroicon-o-arrow-top-right-on-square')
-                    ->url(fn (Property $record): string => $record->frontend_url)
+                    ->url(fn(Property $record): string => $record->frontend_url)
                     ->openUrlInNewTab()
-                    ->visible(fn (Property $record): bool => $record->published_at !== null),
+                    ->visible(fn(Property $record): bool => $record->published_at !== null),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

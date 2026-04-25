@@ -19,9 +19,11 @@ class PropertyController extends Controller
         parameters: [
             new OA\Parameter(name: 'listing_type', in: 'query', description: 'Filter by listing type', schema: new OA\Schema(type: 'string', enum: ['sale', 'rent'])),
             new OA\Parameter(name: 'type', in: 'query', description: 'Filter by property type', schema: new OA\Schema(type: 'string', enum: ['house', 'apartment', 'commercial', 'land'])),
+            new OA\Parameter(name: 'property_type', in: 'query', description: 'Filter by property type (alias for type)', schema: new OA\Schema(type: 'string', enum: ['house', 'apartment', 'commercial', 'land'])),
             new OA\Parameter(name: 'status', in: 'query', description: 'Filter by status (default: available)', schema: new OA\Schema(type: 'string', enum: ['available', 'sold', 'rented', 'reserved'])),
             new OA\Parameter(name: 'city_id', in: 'query', schema: new OA\Schema(type: 'integer')),
             new OA\Parameter(name: 'district_id', in: 'query', schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'subdistrict_id', in: 'query', schema: new OA\Schema(type: 'integer')),
             new OA\Parameter(name: 'min_price', in: 'query', schema: new OA\Schema(type: 'number')),
             new OA\Parameter(name: 'max_price', in: 'query', schema: new OA\Schema(type: 'number')),
             new OA\Parameter(name: 'min_area', in: 'query', description: 'Minimum square meters', schema: new OA\Schema(type: 'number')),
@@ -50,14 +52,15 @@ class PropertyController extends Controller
     {
         $key = CacheService::requestKey($request);
         $properties = CacheService::rememberVersioned('properties', $key, function () use ($request) {
-            $query = Property::with(['city', 'district', 'agent']);
+            $query = Property::with(['city', 'district', 'subdistrict', 'agent']);
 
             if ($request->has('listing_type')) {
                 $query->where('listing_type', $request->listing_type);
             }
 
-            if ($request->has('type')) {
-                $query->where('type', $request->type);
+            $typeFilter = $request->input('property_type', $request->input('type'));
+            if ($typeFilter) {
+                $query->where('type', $typeFilter);
             }
 
             if ($request->has('status')) {
@@ -72,6 +75,10 @@ class PropertyController extends Controller
 
             if ($request->has('district_id')) {
                 $query->where('district_id', $request->district_id);
+            }
+
+            if ($request->has('subdistrict_id')) {
+                $query->where('subdistrict_id', $request->subdistrict_id);
             }
 
             if ($request->has('min_price')) {
@@ -133,7 +140,7 @@ class PropertyController extends Controller
     )]
     public function show($id)
     {
-        $property = CacheService::remember("properties:show:{$id}", fn() => Property::with(['city', 'district', 'agent'])
+        $property = CacheService::remember("properties:show:{$id}", fn() => Property::with(['city', 'district', 'subdistrict', 'agent'])
             ->findOrFail($id));
 
         return new PropertyResource($property);
@@ -153,7 +160,7 @@ class PropertyController extends Controller
     public function featured(Request $request)
     {
         $limit = $request->get('limit', 6);
-        $properties = CacheService::rememberVersioned('properties', "featured:{$limit}", fn() => Property::with(['city', 'district', 'agent'])
+        $properties = CacheService::rememberVersioned('properties', "featured:{$limit}", fn() => Property::with(['city', 'district', 'subdistrict', 'agent'])
             ->where('is_featured', true)
             ->where('status', 'available')
             ->latest()
@@ -171,8 +178,10 @@ class PropertyController extends Controller
         parameters: [
             new OA\Parameter(name: 'listing_type', in: 'query', schema: new OA\Schema(type: 'string', enum: ['sale', 'rent'])),
             new OA\Parameter(name: 'type', in: 'query', schema: new OA\Schema(type: 'string', enum: ['house', 'apartment', 'commercial', 'land'])),
+            new OA\Parameter(name: 'property_type', in: 'query', schema: new OA\Schema(type: 'string', enum: ['house', 'apartment', 'commercial', 'land'])),
             new OA\Parameter(name: 'city_id', in: 'query', schema: new OA\Schema(type: 'integer')),
             new OA\Parameter(name: 'district_id', in: 'query', schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'subdistrict_id', in: 'query', schema: new OA\Schema(type: 'integer')),
             new OA\Parameter(name: 'min_price', in: 'query', schema: new OA\Schema(type: 'number')),
             new OA\Parameter(name: 'max_price', in: 'query', schema: new OA\Schema(type: 'number')),
             new OA\Parameter(name: 'min_area', in: 'query', schema: new OA\Schema(type: 'number')),
@@ -241,7 +250,7 @@ class PropertyController extends Controller
         $properties = CacheService::rememberVersioned('properties', "similar:{$id}:{$limit}", function () use ($id, $limit) {
             $property = Property::findOrFail($id);
 
-            return Property::with(['city', 'district', 'agent'])
+            return Property::with(['city', 'district', 'subdistrict', 'agent'])
                 ->where('id', '!=', $id)
                 ->where('type', $property->type)
                 ->where('listing_type', $property->listing_type)

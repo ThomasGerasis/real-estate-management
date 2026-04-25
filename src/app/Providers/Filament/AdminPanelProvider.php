@@ -55,6 +55,13 @@ class AdminPanelProvider extends PanelProvider
                 __('lang.navigation_groups.settings'),
             ])
             ->sidebarCollapsibleOnDesktop()
+            ->renderHook(
+                'panels::head.end',
+                fn (): string => '<style>
+                    /* Contain Leaflet internal z-indexes within the map stacking context */
+                    .leaflet-container { isolation: isolate; }
+                </style>'
+            )
             ->plugin(
                 SpatieLaravelTranslatablePlugin::make()
                     ->defaultLocales(['el', 'en'])

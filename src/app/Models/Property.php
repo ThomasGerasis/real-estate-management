@@ -14,6 +14,7 @@ class Property extends Model
         'agent_id',
         'city_id',
         'district_id',
+        'subdistrict_id',
         'address',
         'postal_code',
         'price',
@@ -32,6 +33,8 @@ class Property extends Model
         'published_at',
         'meta_title',
         'meta_description',
+        'latitude',
+        'longitude',
     ];
 
     protected $casts = [
@@ -41,7 +44,14 @@ class Property extends Model
         'extra_details' => 'array',
         'is_featured' => 'boolean',
         'published_at' => 'datetime',
+        'latitude' => 'decimal:7',
+        'longitude' => 'decimal:7',
     ];
+
+    public function subdistrict(): BelongsTo
+    {
+        return $this->belongsTo(Subdistrict::class);
+    }
 
     public function agent(): BelongsTo
     {
