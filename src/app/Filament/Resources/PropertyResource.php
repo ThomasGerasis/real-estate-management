@@ -103,11 +103,6 @@ class PropertyResource extends Resource
 
                 Forms\Components\Section::make(__('resources.property.sections.location'))
                     ->schema([
-                        Forms\Components\TextInput::make('address')
-                            ->label(__('resources.property.fields.address'))
-                            ->required()
-                            ->maxLength(255)
-                            ->columnSpanFull(),
                         Forms\Components\Select::make('city_id')
                             ->label(__('resources.property.fields.city'))
                             ->relationship('city', 'name')
@@ -133,9 +128,6 @@ class PropertyResource extends Resource
                                 ->pluck('name', 'id'))
                             ->searchable()
                             ->placeholder('-'),
-                        Forms\Components\TextInput::make('postal_code')
-                            ->label(__('resources.property.fields.postal_code'))
-                            ->maxLength(255),
                         Map::make('location')
                             ->label(__('resources.property.fields.location_map'))
                             ->columnSpanFull()
@@ -174,7 +166,18 @@ class PropertyResource extends Resource
                             ->numeric()
                             ->minValue(0)
                             ->maxValue(100),
+                        Forms\Components\Select::make('garage_type')
+                            ->label(__('resources.property.fields.garage_type'))
+                            ->options([
+                                'open'        => __('resources.property.garage_types.open'),
+                                'pilotis'     => __('resources.property.garage_types.pilotis'),
+                                'underground' => __('resources.property.garage_types.underground'),
+                                'closed'      => __('resources.property.garage_types.closed'),
+                                'spots'       => __('resources.property.garage_types.spots'),
+                            ])
+                            ->placeholder('-'),
                         Forms\Components\TextInput::make('garage')
+                            ->label(__('resources.property.fields.garage'))
                             ->numeric()
                             ->default(0)
                             ->minValue(0)
@@ -195,6 +198,54 @@ class PropertyResource extends Resource
                                 'F' => 'F',
                                 'G' => 'G',
                             ]),
+                        Forms\Components\Toggle::make('elevator')
+                            ->label(__('resources.property.fields.elevator'))
+                            ->inline(false),
+                        Forms\Components\Select::make('heating_type')
+                            ->label(__('resources.property.fields.heating_type'))
+                            ->options([
+                                'central'    => __('resources.property.heating_types.central'),
+                                'autonomous' => __('resources.property.heating_types.autonomous'),
+                                'none'       => __('resources.property.heating_types.none'),
+                            ])
+                            ->placeholder('-'),
+                        Forms\Components\Select::make('heating_fuel')
+                            ->label(__('resources.property.fields.heating_fuel'))
+                            ->options([
+                                'gas'        => __('resources.property.heating_fuels.gas'),
+                                'oil'        => __('resources.property.heating_fuels.oil'),
+                                'electric'   => __('resources.property.heating_fuels.electric'),
+                                'heat_pump'  => __('resources.property.heating_fuels.heat_pump'),
+                                'other'      => __('resources.property.heating_fuels.other'),
+                            ])
+                            ->placeholder('-'),
+                        Forms\Components\Toggle::make('fireplace')
+                            ->label(__('resources.property.fields.fireplace'))
+                            ->inline(false),
+                        Forms\Components\Toggle::make('furnished')
+                            ->label(__('resources.property.fields.furnished'))
+                            ->inline(false),
+                        Forms\Components\Select::make('property_position')
+                            ->label(__('resources.property.fields.property_position'))
+                            ->options([
+                                'front'    => __('resources.property.property_positions.front'),
+                                'interior' => __('resources.property.property_positions.interior'),
+                                'corner'   => __('resources.property.property_positions.corner'),
+                                'through'  => __('resources.property.property_positions.through'),
+                            ])
+                            ->placeholder('-'),
+                        Forms\Components\Select::make('property_condition')
+                            ->label(__('resources.property.fields.property_condition'))
+                            ->options([
+                                'new'               => __('resources.property.property_conditions.new'),
+                                'renovated'         => __('resources.property.property_conditions.renovated'),
+                                'excellent'         => __('resources.property.property_conditions.excellent'),
+                                'needs_renovation'  => __('resources.property.property_conditions.needs_renovation'),
+                            ])
+                            ->placeholder('-'),
+                        Forms\Components\TextInput::make('floor_type')
+                            ->label(__('resources.property.fields.floor_type'))
+                            ->maxLength(255),
                     ])
                     ->columns(3),
 

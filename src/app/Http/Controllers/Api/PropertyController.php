@@ -31,7 +31,7 @@ class PropertyController extends Controller
             new OA\Parameter(name: 'bedrooms', in: 'query', description: 'Minimum number of bedrooms', schema: new OA\Schema(type: 'integer')),
             new OA\Parameter(name: 'bathrooms', in: 'query', description: 'Minimum number of bathrooms', schema: new OA\Schema(type: 'integer')),
             new OA\Parameter(name: 'energy_class', in: 'query', schema: new OA\Schema(type: 'string', example: 'A')),
-            new OA\Parameter(name: 'search', in: 'query', description: 'Search in title, description, address', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'search', in: 'query', description: 'Search in title, description', schema: new OA\Schema(type: 'string')),
             new OA\Parameter(name: 'sort_by', in: 'query', schema: new OA\Schema(type: 'string', default: 'created_at')),
             new OA\Parameter(name: 'sort_order', in: 'query', schema: new OA\Schema(type: 'string', enum: ['asc', 'desc'], default: 'desc')),
             new OA\Parameter(name: 'per_page', in: 'query', schema: new OA\Schema(type: 'integer', default: 12)),
@@ -111,8 +111,7 @@ class PropertyController extends Controller
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%")
-                      ->orWhere('description', 'like', "%{$search}%")
-                      ->orWhere('address', 'like', "%{$search}%");
+                      ->orWhere('description', 'like', "%{$search}%");
                 });
             }
 
