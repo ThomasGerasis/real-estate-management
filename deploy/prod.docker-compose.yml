@@ -73,7 +73,11 @@ services:
       - db_data:/var/lib/mysql
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD}"]
+      # -h 127.0.0.1 forces a real TCP check. "-h localhost" can succeed via
+      # the unix socket against MySQL's temporary init-only instance before
+      # the real TCP-listening mysqld is up, causing app connections to be
+      # refused despite the healthcheck reporting "healthy".
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${DB_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 5
