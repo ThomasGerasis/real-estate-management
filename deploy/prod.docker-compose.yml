@@ -1,0 +1,101 @@
+services:
+  # ─── Application (FrankenPHP — SSL + PHP in one container) ──────────────────
+  app:
+    image: ${REGISTRY:-ghcr.io/thomasgerasis}/real-estate:${IMAGE_TAG:-latest}
+    container_name: real-estate-app
+    env_file: ./prod.env
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - app_storage:/app/storage/app
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/up"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  # ─── Queue Worker ───────────────────────────────────────────────────────────
+  queue:
+    image: ${REGISTRY:-ghcr.io/thomasgerasis}/real-estate:${IMAGE_TAG:-latest}
+    container_name: real-estate-queue
+    command: php artisan queue:work redis --sleep=3 --tries=3 --max-time=3600 --memory=256
+    env_file: ./prod.env
+    environment:
+      APP_ENV: production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - app_storage:/app/storage/app
+    restart: unless-stopped
+
+  # ─── Scheduler ─────────────────────────────────────────────────────────────
+  scheduler:
+    image: ${REGISTRY:-ghcr.io/thomasgerasis}/real-estate:${IMAGE_TAG:-latest}
+    container_name: real-estate-scheduler
+    command: sh -c "while true; do php artisan schedule:run --no-interaction; sleep 60; done"
+    env_file: ./prod.env
+    environment:
+      APP_ENV: production
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - app_storage:/app/storage/app
+    restart: unless-stopped
+
+  # ─── Database ───────────────────────────────────────────────────────────────
+  db:
+    image: mysql:8.0
+    container_name: real-estate-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ─── Redis ──────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: real-estate-redis
+    command: redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  db_data:
+  redis_data:
+  app_storage:
+  caddy_data:
+  caddy_config:
