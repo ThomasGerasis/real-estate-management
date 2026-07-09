@@ -64,6 +64,13 @@ jobs:
             set -e
             cd /opt/real-estate
 
+            # Sync deploy config (compose/Caddyfile/etc) from main — the app
+            # code itself ships via the built image, but compose/Caddy/env
+            # files are read directly from this checkout and were never
+            # being updated automatically before this step.
+            git fetch origin main
+            git reset --hard origin/main
+
             echo "${{ secrets.GITHUB_TOKEN }}" | \
               docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
