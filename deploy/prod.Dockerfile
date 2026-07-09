@@ -37,12 +37,19 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 
 # ── Dependency layer (cached until composer files change) ────────────────────
+# --no-scripts/--no-autoloader: skips artisan/autoload-file steps that need
+# app/ source (e.g. app/helpers.php), which isn't copied in yet.
 COPY src/composer.json src/composer.lock* ./
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+RUN composer install --no-dev --no-scripts --no-autoloader --no-interaction --no-progress
 
 # ── Application source ────────────────────────────────────────────────────────
 COPY src/ .
 COPY --from=frontend /app/public/build ./public/build
+
+# ── Finish install now that app/ source (incl. helpers.php) is present ───────
+# dump-autoload auto-triggers the post-autoload-dump script (package:discover,
+# filament:upgrade) defined in composer.json.
+RUN composer dump-autoload --no-dev --optimize --no-interaction
 
 # ── Caddyfile ─────────────────────────────────────────────────────────────────
 COPY deploy/Caddyfile /etc/caddy/Caddyfile
