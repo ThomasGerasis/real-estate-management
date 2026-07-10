@@ -58,6 +58,14 @@ RUN mkdir -p storage/app/public storage/framework/{cache,sessions,views} storage
     && chown -R www-data:www-data /app \
     && chmod -R 755 storage bootstrap/cache
 
+# Pre-create Caddy's data/config dirs owned by www-data. These paths are
+# mounted as named volumes in prod.docker-compose.yml; if they don't already
+# exist (with correct ownership) in the image, Docker populates the volume's
+# mountpoint as root:root on first creation, which then blocks Caddy (running
+# as www-data) from writing certs/config — causing TLS cert issuance to fail.
+RUN mkdir -p /data/caddy /config/caddy \
+    && chown -R www-data:www-data /data /config
+
 COPY deploy/start.sh /usr/local/bin/start
 RUN chmod +x /usr/local/bin/start
 
