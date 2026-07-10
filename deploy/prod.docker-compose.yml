@@ -69,6 +69,11 @@ services:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
+    # Bound to the VPS loopback only (not exposed publicly). Use an SSH
+    # tunnel (e.g. via Navicat's built-in SSH Tunnel tab) to reach it from
+    # a local client: target host 127.0.0.1, target port 3306.
+    ports:
+      - "127.0.0.1:3306:3306"
     volumes:
       - db_data:/var/lib/mysql
     restart: unless-stopped
