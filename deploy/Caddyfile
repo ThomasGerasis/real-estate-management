@@ -11,10 +11,10 @@
 
     root * /app/public
 
-    # FrankenPHP worker mode — PHP boots once, handles many requests
-    php_server {
-        worker /app/public/index.php
-    }
+    # Classic (non-worker) PHP handling. Worker mode requires the app to be
+    # bootstrapped via Laravel Octane's FrankenPHP driver (not installed here);
+    # using `worker` against the stock index.php makes FrankenPHP fail to boot.
+    php_server
 
     encode zstd br gzip
 
