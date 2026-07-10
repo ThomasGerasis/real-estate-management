@@ -22,10 +22,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        User::factory()->create([
-            'name' => 'Thomas',
-            'email' => 'thomasgerasis@gmail.com',
-            'password' => bcrypt('1234'),
-        ]);
+        // Admin users are created via `php artisan make:filament-user`
+        // (interactive, no plaintext credentials in source control).
     }
 }
