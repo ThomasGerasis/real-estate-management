@@ -17,6 +17,7 @@ return [
             'type' => 'Τύπος',
             'listing_type' => 'Τύπος Καταχώρησης',
             'status' => 'Κατάσταση',
+            'publish_status' => 'Κατάσταση Δημοσίευσης',
             'price' => 'Τιμή',
             'postal_code' => 'Τ.Κ.',
             'agent' => 'Μεσίτης',
@@ -38,6 +39,7 @@ return [
             'property_position' => 'Θέση Ακινήτου',
             'property_condition' => 'Κατάσταση Ακινήτου',
             'floor_type' => 'Είδος Πατώματος',
+            'floor' => 'Όροφος',
             'year_built' => 'Έτος Κατασκευής',
             'images' => 'Εικόνες',
             'featured' => 'Επιλεγμένο',
@@ -89,6 +91,10 @@ return [
             'sold' => 'Πωλήθηκε',
             'rented' => 'Ενοικιάστηκε',
             'pending' => 'Σε Εκκρεμότητα',
+        ],
+        'publish_statuses' => [
+            'draft' => 'Πρόχειρο',
+            'published' => 'Δημοσιευμένο',
         ],
     ],
 

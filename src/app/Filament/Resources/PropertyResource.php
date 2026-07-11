@@ -80,6 +80,15 @@ class PropertyResource extends Resource
                             ])
                             ->required()
                             ->default('available'),
+                        Forms\Components\Select::make('publish_status')
+                            ->label(__('resources.property.fields.publish_status'))
+                            ->options([
+                                'draft' => __('resources.property.publish_statuses.draft'),
+                                'published' => __('resources.property.publish_statuses.published'),
+                            ])
+                            ->required()
+                            ->default('published')
+                            ->helperText('Draft properties are hidden from the public site/API.'),
                         Forms\Components\TextInput::make('price')
                             ->label(__('resources.property.fields.price'))
                             ->required()
@@ -156,6 +165,10 @@ class PropertyResource extends Resource
                             ->numeric()
                             ->suffix('m²')
                             ->maxValue(99999.99),
+                        Forms\Components\TextInput::make('floor')
+                            ->label(__('resources.property.fields.floor'))
+                            ->numeric()
+                            ->helperText('Floor number (e.g. 0 for ground floor, -1 for basement).'),
                         Forms\Components\TextInput::make('bedrooms')
                             ->label(__('resources.property.fields.bedrooms'))
                             ->numeric()
@@ -246,6 +259,7 @@ class PropertyResource extends Resource
                         Forms\Components\TextInput::make('floor_type')
                             ->label(__('resources.property.fields.floor_type'))
                             ->maxLength(255),
+
                     ])
                     ->columns(3),
 
@@ -373,6 +387,14 @@ class PropertyResource extends Resource
                         'info' => 'pending',
                     ])
                     ->formatStateUsing(fn(string $state): string => __('resources.property.statuses.' . $state)),
+                Tables\Columns\TextColumn::make('publish_status')
+                    ->label(__('resources.property.fields.publish_status'))
+                    ->badge()
+                    ->colors([
+                        'gray' => 'draft',
+                        'success' => 'published',
+                    ])
+                    ->formatStateUsing(fn(string $state): string => __('resources.property.publish_statuses.' . $state)),
                 Tables\Columns\TextColumn::make('city.name')
                     ->label(__('resources.property.fields.city'))
                     ->searchable()
@@ -422,6 +444,12 @@ class PropertyResource extends Resource
                         'rented' => __('resources.property.statuses.rented'),
                         'pending' => __('resources.property.statuses.pending'),
                     ]),
+                Tables\Filters\SelectFilter::make('publish_status')
+                    ->label(__('resources.property.fields.publish_status'))
+                    ->options([
+                        'draft' => __('resources.property.publish_statuses.draft'),
+                        'published' => __('resources.property.publish_statuses.published'),
+                    ]),
                 Tables\Filters\SelectFilter::make('city')
                     ->label(__('resources.property.fields.city'))
                     ->relationship('city', 'name'),
@@ -445,7 +473,7 @@ class PropertyResource extends Resource
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->url(fn(Property $record): string => $record->frontend_url)
                     ->openUrlInNewTab()
-                    ->visible(fn(Property $record): bool => $record->published_at !== null),
+                    ->visible(fn(Property $record): bool => $record->published_at !== null && $record->publish_status === 'published'),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

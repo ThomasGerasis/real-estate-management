@@ -17,6 +17,7 @@ return [
             'type' => 'Type',
             'listing_type' => 'Listing Type',
             'status' => 'Status',
+            'publish_status' => 'Publish Status',
             'price' => 'Price',
             'agent' => 'Agent',
             'address' => 'Address',
@@ -37,6 +38,7 @@ return [
             'property_position' => 'Property Position',
             'property_condition' => 'Property Condition',
             'floor_type' => 'Floor Type',
+            'floor' => 'Floor',
             'year_built' => 'Year Built',
             'images' => 'Images',
             'featured' => 'Featured',
@@ -88,6 +90,10 @@ return [
             'sold' => 'Sold',
             'rented' => 'Rented',
             'pending' => 'Pending',
+        ],
+        'publish_statuses' => [
+            'draft' => 'Draft',
+            'published' => 'Published',
         ],
     ],
 

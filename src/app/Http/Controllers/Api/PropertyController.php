@@ -52,7 +52,8 @@ class PropertyController extends Controller
     {
         $key = CacheService::requestKey($request);
         $properties = CacheService::rememberVersioned('properties', $key, function () use ($request) {
-            $query = Property::with(['city', 'district', 'subdistrict', 'agent']);
+            $query = Property::with(['city', 'district', 'subdistrict', 'agent'])
+                ->where('publish_status', 'published');
 
             if ($request->has('listing_type')) {
                 $query->where('listing_type', $request->listing_type);
@@ -140,6 +141,7 @@ class PropertyController extends Controller
     public function show($id)
     {
         $property = CacheService::remember("properties:show:{$id}", fn() => Property::with(['city', 'district', 'subdistrict', 'agent'])
+            ->where('publish_status', 'published')
             ->findOrFail($id));
 
         return new PropertyResource($property);
@@ -162,6 +164,7 @@ class PropertyController extends Controller
         $properties = CacheService::rememberVersioned('properties', "featured:{$limit}", fn() => Property::with(['city', 'district', 'subdistrict', 'agent'])
             ->where('is_featured', true)
             ->where('status', 'available')
+            ->where('publish_status', 'published')
             ->latest()
             ->limit($limit)
             ->get());
@@ -224,6 +227,7 @@ class PropertyController extends Controller
     public function typeCounts()
     {
         $counts = CacheService::rememberVersioned('properties', 'type_counts', fn() => Property::selectRaw('type, count(*) as total')
+            ->where('publish_status', 'published')
             ->groupBy('type')
             ->pluck('total', 'type'));
 
@@ -254,6 +258,7 @@ class PropertyController extends Controller
                 ->where('type', $property->type)
                 ->where('listing_type', $property->listing_type)
                 ->where('status', 'available')
+                ->where('publish_status', 'published')
                 ->where(function ($query) use ($property) {
                     $query->where('city_id', $property->city_id)
                           ->orWhereBetween('price', [

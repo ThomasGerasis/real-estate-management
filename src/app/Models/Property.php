@@ -17,6 +17,7 @@ class Property extends Model
         'subdistrict_id',
         'price',
         'status',
+        'publish_status',
         'type',
         'listing_type',
         'bedrooms',
@@ -33,6 +34,7 @@ class Property extends Model
         'property_position',
         'property_condition',
         'floor_type',
+        'floor',
         'garage_type',
         'images',
         'extra_details',
@@ -47,6 +49,7 @@ class Property extends Model
     protected $casts = [
         'price' => 'decimal:2',
         'square_meters' => 'decimal:2',
+        'floor' => 'integer',
         'images' => 'array',
         'extra_details' => 'array',
         'elevator' => 'boolean',
@@ -129,7 +132,7 @@ class Property extends Model
         
         // Description excerpt
         if ($this->description) {
-            $excerpt = substr(strip_tags($this->description), 0, 100);
+            $excerpt = mb_substr(strip_tags($this->description), 0, 100);
             $parts[] = $excerpt;
         }
         
